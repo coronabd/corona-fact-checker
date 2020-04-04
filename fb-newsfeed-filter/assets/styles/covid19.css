@@ -1,0 +1,99 @@
+.misinfo-marker-span {
+    height: 2em;
+    text-align: center;
+    line-height: 2em;
+    color: white !important;
+    margin-top: 0.5em;
+    cursor: pointer;
+}
+
+.misinfo-marker-is-misinfo {
+    background-color: #f44336;
+}
+
+.misinfo-marker-not-misinfo {
+    background-color: #4caf50;
+}
+
+.misinfo-marker-wrapper {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.misinfo-marker-info-close-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: white;
+}
+
+.misinfo-marker-info-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #e5e5e3;
+    z-index: 5;
+    margin-top: 2em;
+    padding: 40px 30px 30px 30px;
+    color: #000000;
+}
+
+.misinfo-marker-info {}
+
+.misinfo-checker-checked-symbol {
+    color: white;
+    border: 1px solid;
+    border-radius: 5em;
+    text-align: center;
+    float: right;
+    font-size: 10px;
+    padding: 4px 8px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    margin-bottom: 10px;
+    margin-top: -10px;
+}
+
+.misinfo-checker-checked-is-misinfo {
+    border-color: #f44336;
+    color: #f44336;
+}
+
+.misinfo-checker-checked-not-misinfo {
+    border-color: #4caf50;
+    color: #4caf50;
+}
+
+.dislike-button-flipped {
+    -moz-transform: scale(1, -1);
+    -webkit-transform: scale(1, -1);
+    -o-transform: scale(1, -1);
+    -ms-transform: scale(1, -1);
+    transform: scale(1, -1);
+}
+
+.font-white {
+    color: white !important;
+}
+
+.misinfo-checker-feedback-button {
+    margin-right: 5px !important;
+    align-content: center;
+}
+
+.misinfo-checker-feedback-button img {
+    height: 25px;
+    margin-top: -5px;
+}
+
+.light-margin-top {
+    margin-top: 5px;
+}
+
+.light-padding-top {
+    padding-top: 5px;
+}
+
+.misinfo_feedback_class{
+
+}

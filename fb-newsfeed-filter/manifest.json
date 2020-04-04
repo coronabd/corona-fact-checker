@@ -1,0 +1,27 @@
+{
+    "author": "Covid19 Misinfo Team",
+    "browser_action": {
+        // "default_icon": "images/icon.png",
+        // "default_popup": "popup/popup.html",
+        "default_title": "Misinfo Checker"
+    },
+    "content_scripts": [{
+        "matches": ["https://*.facebook.com/*"],
+        "js": ["scripts/jquery.js", "scripts/covid19.js"],
+        "css": ["assets/styles/covid19.css"]
+    }],
+    "description": "Check Facebook for Covid19 related Misinfo",
+    // "default_locale": "en",
+    "manifest_version": 2,
+    "name": "Covid19 Misinfo Tracker",
+    "permissions": [
+        "https://*.facebook.com/*"
+    ],
+    "version": "1.0.0",
+    "web_accessible_resources": [
+        "scripts/jquery.js",
+        "scripts/covid.js",
+        "assets/images/like-icon.png",
+        "assets/images/dislike-icon.png"
+    ]
+}
