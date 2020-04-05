@@ -3,25 +3,75 @@ document.addEventListener('DOMContentLoaded', onLoad);
 
 function onLoad() {
 
-  // Assign click events for pop up buttons
-  document.querySelector('#myths').addEventListener('click', Myths);
-
-  showURLLists();
+    loadPlugin();
 }
 
 
+function loadPlugin() {
+    chrome.storage.sync.get(['customLinks', 'pluginEnabled' ,'preferences'], function(result) {
+        console.log('Value customLinks = ' + result.customLinks);
+        $('#custom_link_textarea').val(result.customLinks.join("\n"));
 
-url_list = ["www.msn.com", "www.yahoo.com", "www.bing.com"]; //add the urls here dyanmically
-// create a list of blocked urls and display
-function showURLLists() {
-  var html = '';
-  for (var index = 0; index < url_list.length; index++) {
-    html = html + '<li>' + url_list[index] + '</li>';
-  }
+        console.log('Value pluginEnabled = ' + result.pluginEnabled);
+        $('#plugin_status').text(result.pluginEnabled ? "Enabled" : "Disabled");
 
-  document.getElementById('hosts').innerHTML = html;
+        // if( result.preferences == undefined){
+        // 	result.preferences =  {};
+        // }
+        // console.log('Value preferences = ' + result.preferences);
+        // $('#use_central_database').prop('checked', result.preferences.useCentralDatabase);
+
+    });
+
+    $('#custom_link_save_button').click(function() {
+        saveCustomLinks();
+    });
+
+
+    $('#plugin_status_button').click(function() {
+        chrome.storage.sync.get(['pluginEnabled'], function(result) {
+            togglePlugin(!result.pluginEnabled);
+        });
+    });
+
+
+    // $('#use_central_database').change(function(){
+    // 	alert("checked: " + $('#use_central_database').is(":checked"));
+    // 	//savePreferences();
+    // });    
 }
 
-function Myths() {
-  alert("TODO Decide")
+function togglePlugin(pluginEnabled) {
+    $('#plugin_status').text(pluginEnabled ? "Enabled" : "Disabled");
+
+    chrome.storage.sync.set({ pluginEnabled: pluginEnabled }, function() {
+        console.log('Set pluginEnabled = ' + pluginEnabled);
+    });
+}
+
+function saveCustomLinks() {
+
+    customLinks = $('#custom_link_textarea')
+        .val()
+        .split("\n")
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+    $('#custom_link_textarea').val(customLinks.join("\n"));
+    chrome.storage.sync.set({ customLinks: customLinks }, function() {
+        console.log('Set customLinks = ' + customLinks);
+        $('#custom_link_save_result').text("Saved");
+        $('#custom_link_save_result').show().fadeOut(2000);
+    });
+}
+
+
+function savePreferences() {
+
+    preferences = {
+        useCentralDatabase: $('#use_central_database').is(":checked")
+    }
+
+    chrome.storage.sync.set({ preferences: preferences }, function() {
+        console.log('preferences ', preferences);
+    });
 }
