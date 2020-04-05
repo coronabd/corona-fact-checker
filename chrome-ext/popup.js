@@ -15,11 +15,11 @@ function loadPlugin() {
         console.log('Value pluginEnabled = ' + result.pluginEnabled);
         $('#plugin_status').text(result.pluginEnabled ? "Enabled" : "Disabled");
 
-        // if( result.preferences == undefined){
-        // 	result.preferences =  {};
-        // }
-        // console.log('Value preferences = ' + result.preferences);
-        // $('#use_central_database').prop('checked', result.preferences.useCentralDatabase);
+        if( result.preferences == undefined){
+        	result.preferences =  {};
+        }
+        console.log('Value preferences = ' + result.preferences);
+        $('#use_central_database').prop('checked', result.preferences.useCentralDatabase);
 
     });
 
@@ -35,10 +35,9 @@ function loadPlugin() {
     });
 
 
-    // $('#use_central_database').change(function(){
-    // 	alert("checked: " + $('#use_central_database').is(":checked"));
-    // 	//savePreferences();
-    // });    
+    $('#use_central_database').change(function(){
+    	savePreferences();
+    });    
 }
 
 function togglePlugin(pluginEnabled) {
