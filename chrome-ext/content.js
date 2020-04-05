@@ -3,5 +3,6 @@
 //TODO: search bangla font?
 //the following method detects one instance and alerts, TODO: multiple instance of the same keyword?
 
-if($("*:contains('Corona')").length > 0)
-    alert('found Covid-19 related news');
+if($("*:contains('Corona')").length > 0){
+    // alert('found Covid-19 related news');
+}

@@ -27,7 +27,6 @@ function loadPlugin() {
         saveCustomLinks();
     });
 
-
     $('#plugin_status_button').click(function() {
         chrome.storage.sync.get(['pluginEnabled'], function(result) {
             togglePlugin(!result.pluginEnabled);
@@ -37,7 +36,7 @@ function loadPlugin() {
 
     $('#use_central_database').change(function(){
     	savePreferences();
-    });    
+    });
 }
 
 function togglePlugin(pluginEnabled) {
