@@ -7,9 +7,9 @@ host = app.config['DB_HOST']
 port = app.config['DB_PORT']
 
 client = MongoClient(host, port)
-db = client['covid19misinfo']
+db = client[app.config['DB_NAME']]
 
-misinfo_collection = db['misinfo_collection']
+misinfo_collection = db[app.config['MISINFO_COLLECTION']]
 
 
 def insert_into_misinfo_collection(data):

@@ -13,7 +13,7 @@ CORS(app)
 
 def get_the_closet_misinfo_set(claim):
     all_misinfo = db_operation.get_all_misinfo_claims()
-    matched_claims = claim_checker.get_matched_claims(claim, all_misinfo, top=3, threshold=0.25)
+    matched_claims = claim_checker.get_matched_claims(claim, all_misinfo, top=app.config['NUMBER_OF_RESULT'], threshold=app.config['SIMILARITY_THRESHOLD'])
     return matched_claims
 
 @app.route('/')
