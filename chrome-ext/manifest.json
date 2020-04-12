@@ -1,27 +1,34 @@
 {
-  "manifest_version": 2,
+    "manifest_version": 2,
 
-  "name": "COVID-19",
-  "description": "Blocks a website domain for you in Chrome.",
-  "version": "1.0",
+    "name": "COVID-19",
+    "description": "Blocks a website domain for you in Chrome.",
+    "version": "1.0",
 
-  "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
-  },
-  "permissions": [
-    "webNavigation","<all_urls>","tabs","webRequest","webRequestBlocking","storage"
-  ],
-  "background":{
-    "scripts":["background.js"]
-  },
-  "content_scripts": [
+    "browser_action":{
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "webNavigation",
+        "<all_urls>",
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "storage"
+    ],
+    "background":    {
+        "scripts": ["background.js"]
+    },
+    "content_scripts": [
     {
-      "matches": [
-         "<all_urls>"
-      ],
-      "run_at": "document_idle",
-      "js": ["jquery-2.1.3.min.js", "content.js"]
-    }
-  ]
+        "matches": [
+            "<all_urls>"
+        ],
+        "run_at": "document_idle",
+        "js": [
+            "js/jquery-3.4.1.min.js",
+            "content.js"
+        ]
+    }]
 }

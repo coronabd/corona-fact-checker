@@ -74,11 +74,11 @@ $(document).ready(function() {
         //     str += '<b>Similarity:</b>&nbsp;' + data.similarity + "<br/>" + "<hr/>"
         // }
 
-        str += '<b>Explanation:</b><br/>' + data.explanation;
+        str += '<b>Explanation:</b><br/>' + data.explanation + "<br/>";
 
-        str += '<b>Verified By:</b><br/>' + data.verified_by;
+        str += '<b>Verified By:</b><br/>' + data.verified_by + "<br/>";
 
-          str += '<b>Verification Link:</b><br/>' + data.verification_link;
+        str += '<b>Verification Link:</b><br/>' + data.verification_link;
 
         var info = $('<div></div>').html(str);
 
@@ -139,7 +139,8 @@ $(document).ready(function() {
 
             infoElement.hide();
             misinfoMarkerWrapper.append(infoElement);
-            node.find(".mtm").before(misinfoMarkerWrapper);
+            var nodeToFind = $("div[class='mtm']"); // look for div with only class = mtm; other posts had two classes --> mtm _5pco or mtm xxxx which caused multiple addition of the wrapper
+            node.find(nodeToFind).before(misinfoMarkerWrapper);
 
             misinfoMarker.click(function(e) {
                 infoElement.fadeIn('medium');
