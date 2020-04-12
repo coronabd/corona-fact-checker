@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Covid-19 Misinformation Tracker</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+<form class="well form-horizontal" action="/insert" method="POST"  id="contact_form" enctype = "multipart/form-data">
+    <fieldset>
+        <legend><center><h2><b>Covid-19 Misinformation Tracking</b></h2></center></legend><br>
+        <div class="well well-lg">
+            <h3><b>Claim:</b> {{ misinfo_list[0]['claim'] }}</h3>
+        </div>
+        {% for post in misinfo_list %}
+
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Possible Misinformation</div>
+                <div class="panel-body">
+                    <h4>We found a possible misinformation similar to the claim with a similarity score: <b>{{ post['similarity'] }}</b></h4>
+                    <p><b>False Claim: </b> {{ post['data']['misinfo'] }}</p>
+                    <p><b>Truth:</b> {{ post['data']['truth'] }}</p>
+                    <p><b>Link of Verification:</b> {{ post['data']['truth_link'] }}</p>
+                    <p><b>Verified By:</b> {{ post['data']['verified_by'] }}</p>
+                </div>
+
+            </div>
+        {% endfor %}
+    <div class="panel-footer"><a href="{{ url_for('fact_checker') }}">Check for another claim?</a></div>
+    </fieldset>
+</form>
+
+
+</body>

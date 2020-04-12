@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Covid-19 Misinformation Tracker</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+
+    <form class="well form-horizontal" action="/insert" method="POST"  id="contact_form" enctype = "multipart/form-data">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend><center><h2><b>Covid-19 Misinformation Collection Form</b></h2></center></legend><br>
+
+            <!-- Text input-->
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Possible Misinformation</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-question-sign"></i></span>
+                        <textarea  name="misinfo_claim" placeholder="e.g., Coronavirus is a bioweapon" class="form-control" rows="4" type="text" required></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Type of Misinformation</label>
+                <div class="col-md-4 selectContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                        <select name="misinfo_type" class="form-control selectpicker">
+                            <option value="">Select Type</option>
+                            <option title="fear-invoking messages such as those with violent imagery, death or mass-killings">Alarmism</option>
+                            <option title="messages have religious connotations, celebrity or societal references">Culture</option>
+                            <option title="messages suggest remedies – alternative or mainstream – that make claims on curing people of the virus">Cure</option>
+                            <option title="messages have references to animals and the environment">Nature</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Tags</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-tags"></i></span>
+                        <input  name="misinf_tag" placeholder="e.g., medical, religious" class="form-control"  type="text" data-role="tagsinput">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text input-->
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" >Source Link of Misinfo</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-link"></i></span>
+                        <input name="source_link" placeholder="e.g., www.abc.com/post/123" class="form-control"  type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Source Type</label>
+                <div class="col-md-4 selectContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                        <select name="source_type" class="form-control selectpicker">
+                            <option value="">Select Type</option>
+                            <option>Image</option>
+                            <option>Video</option>
+                            <option>Facebook Post</option>
+                            <option>Tweet</option>
+                            <option>News Article</option>
+                            <option>Message</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" >Attachment (If available)</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="image" id="image">
+                        <label class="custom-file-label" for="image">Select file...</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Text input-->
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">Truth</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-check"></i></span>
+                        <textarea  name="truth" placeholder="e.g., Corona isn't a bioweapon. It's a virus" class="form-control" rows="5" type="text"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" >Source Link of Truth</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-link"></i></span>
+                        <input name="source_link_truth" placeholder="e.g., www.def.com/post/123" class="form-control"  type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" >Verified By</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-thumbs-up"></i></span>
+                        <input name="verified_by" placeholder="e.g., WHO, CDC, etc." class="form-control"  type="text">
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Select Basic -->
+
+            <!-- Success message -->
+            <div class="alert alert-success" role="alert" id="success_message" style="display: none">Success <i class="glyphicon glyphicon-thumbs-up"></i> Success!.</div>
+
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label"></label>
+                <div class="col-md-4"><br>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type="submit" class="btn btn-warning" >&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSUBMIT <span class="glyphicon glyphicon-send"></span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</button>
+                    <div><br>
+                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="{{ url_for('fact_checker') }}">Want to check a claim?</a>
+            </div>
+                </div>
+            </div>
+
+
+        </fieldset>
+    </form>
+</div>
+</body>

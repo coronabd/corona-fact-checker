@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Covid-19 Misinformation Tracker</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+<form class="well form-horizontal" action="/insert" method="POST"  id="contact_form" enctype = "multipart/form-data">
+    <fieldset>
+        <legend><center><h2><b>Covid-19 Misinformation Tracking</b></h2></center></legend><br>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">No Misinformation Found!!!</h3>
+            </div>
+            <div class="panel-body">
+                <h4><b>Claim: </b></h4> <span style="font-style: italic">{{ claim }}</span>
+            </div>
+            <div class="panel-footer"><a href="{{ url_for('fact_checker') }}">Check for another claim?</a></div>
+        </div>
+    </fieldset>
+</form>
+
+
+</body>
