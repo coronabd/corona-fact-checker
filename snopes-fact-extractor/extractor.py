@@ -13,18 +13,22 @@ sub_urls = html_soup.find('div', class_='card-body').find('ul')
 #print(sub_urls)
 
 url_list = []
+url_tag_list = []
 #loop through all the urls in sub_URLS
 for urls in sub_urls.find_all('li'):
-    url_list.append(urls.find('a')['href'])
+    temp = urls.find('a')
+    url_list.append(temp['href']);
+    url_tag_list.append(temp.text)
 
-#print(url_list)
-
+# print(url_list)
+# print(url_tag_list)
+fact_news_tag = []
 fact_news_url = []
 fact_news_title = []
 fact_news_description = []
 fact_news_claim = []
 
-for URL in url_list:
+for URL,tag in zip(url_list, url_tag_list):
     # URL = 'https://www.snopes.com/collections/coronavirus-origins-treatments/';
     response = requests.get(URL);
     html_soup = BeautifulSoup(response.text, 'html.parser');
@@ -40,21 +44,22 @@ for URL in url_list:
         # print(news.h5.text); #fact-news-title
         # print(news.p.text); #fact-news-description
         # print(news.find('div', class_="media-body").text.strip())
-
+        fact_news_tag.append(tag)
         fact_news_url.append(news['href']);
         fact_news_title.append(news.h5.text);
         fact_news_description.append(news.p.text);
         fact_news_claim.append(news.find('div', class_="media-body").text.strip())
 
 
-df = pd.DataFrame({'news_url':fact_news_url,
+df = pd.DataFrame({'fact_tag':fact_news_tag,
+                   'news_url':fact_news_url,
                    'news_title':fact_news_claim,
                    'news_description':fact_news_description,
                    'news_claim': fact_news_claim})
 
-#print(df)
+print(df)
 
-#convert to csv
+# #convert to csv
 df.to_csv("snopes_fact_news.csv", sep=',', encoding='utf-8')
 
 
