@@ -44,18 +44,25 @@ $(document).ready(function() {
         return 'misinfoMarkerWrapper_' + count;
     };
     //
-    var _handlefeedbackButtonClick = function(postData) {
-      alert("Feedback received. Thanks!!");
-        // console.log(postData);
-        // $.post(API_FEEDBACK, postData)
-        //     .done(function onSuccess(result) {
-        //         // result = dummyData;
-        //         alert("Thanks for your feedback");
-        //         console.log('Feedback posted successfully');
-        //     })
-        //     .fail(function onError(xhr, status, error) {
-        //         console.log(error);
-        //     })
+    var _handlefeedbackButtonClick = function(postData, id) {
+
+        if (id && id === "like") {
+            alert("Feedback received. We noted that you marked this as misinformation! Thanks!!"); 
+        } else if (id && id === "dislike") {
+            alert("Feedback received. We noted that you marked this as NOT misinformation! Thanks!!"); 
+        } else {
+            alert("Feedback received. Thanks!!");
+            // console.log(postData);
+            // $.post(API_FEEDBACK, postData)
+            //     .done(function onSuccess(result) {
+            //         // result = dummyData;
+            //         alert("Thanks for your feedback");
+            //         console.log('Feedback posted successfully');
+            //     })
+            //     .fail(function onError(xhr, status, error) {
+            //         console.log(error);
+            //     })
+        }
     };
     //
     //
@@ -87,19 +94,19 @@ $(document).ready(function() {
 
         var feedbackButton = $('<a></a>');
         feedbackButton.attr('misinfoId', id)
-        feedbackButton.html('This should not be a Misinfo')
-        feedbackButton.css('color', '#ff9022')
 
         feedbackButton.click(function(e) {
             _handlefeedbackButtonClick(postData);
         });
 
 
-        var feedBackTile = $('<p>Provide Feedback</p>').addClass('provide_feedback_title');
+        var feedBackTile = $('<p>Please provide Feedback</p>').addClass('provide_feedback_title');
+        var url = chrome.runtime.getURL("dislike-icon.png");
+        var likeDislikeButtons = $("<div class='light-padding-top' style='text-align: center'> <button id='like'>Misinfo</button> <button id='dislike'>Not Misinfo</button></div>");
 
-
-        var likeDislikeButtons = $("<div class='light-padding-top' style='text-align: center'> </div>");
-
+        likeDislikeButtons.click(function(e) {
+          _handlefeedbackButtonClick(postData, event.target.id);
+        });
 
         likeDislikeButtons.append(feedBackTile);
         likeDislikeButtons.append(feedbackButton);
@@ -126,6 +133,10 @@ $(document).ready(function() {
             var misinfoMarkerWrapper = $("<div class='misinfo-marker-wrapper'></div>");
             misinfoMarkerWrapper.attr('id', _getmisinfoWrapperId(misinfoCount));
             misinfoMarkerWrapper.append(misinfoMarker);
+
+            // add buttons
+            // misinfoMarkerWrapper.append( likeDislikeButtons);
+
 
             var infoElement = _getmisinfoInfoElement(result, misinfoCount, postData);
             console.log("info", infoElement);
