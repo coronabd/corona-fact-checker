@@ -16,6 +16,7 @@ def get_the_closet_misinfo_set(claim):
     matched_claims = claim_checker.get_matched_claims(claim, all_misinfo, top=app.config['NUMBER_OF_RESULT'], threshold=app.config['SIMILARITY_THRESHOLD'])
     return matched_claims
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -58,6 +59,7 @@ def insert():
     post_id = db_operation.insert_into_misinfo_collection(data)
     print("Susccess " + str(post_id))
     return render_template("submission_success.html")
+
 
 @app.route('/covid19/api/get_related_misinfo', methods=['POST'])
 def cb_detection():
