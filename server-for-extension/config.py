@@ -3,10 +3,10 @@ import os
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 IMAGE_UPLOADS = PROJECT_ROOT + "/files/"
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
-DB_HOST = 'localhost'
+DB_HOST = <CONNECTION URL STRING> 
 DB_PORT = 27017
 MISINFO_COLLECTION = 'misinfo_collection'
-DB_NAME = 'covid19misinfo'
+DB_NAME = 'covid'
 
 SIMILARITY_THRESHOLD = 0.25
 NUMBER_OF_RESULT = 2
