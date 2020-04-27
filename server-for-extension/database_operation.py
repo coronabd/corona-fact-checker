@@ -6,7 +6,7 @@ app.config.from_object('config')
 host = app.config['DB_HOST']
 port = app.config['DB_PORT']
 
-client = MongoClient(host, port)
+client = MongoClient(host)
 db = client[app.config['DB_NAME']]
 
 misinfo_collection = db[app.config['MISINFO_COLLECTION']]
