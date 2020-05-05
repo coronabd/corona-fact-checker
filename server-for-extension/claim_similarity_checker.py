@@ -6,6 +6,9 @@ import string
 from flask import Flask
 import itertools
 
+from langdetect import detect
+import bengali_claim_similarity_checker as bengali_claim_checker
+
 app = Flask(__name__)
 app.config.from_object('config')
 
@@ -45,14 +48,18 @@ def calculate_sim_sim_matrix(claim, misinfo):
 
 
 def get_matched_claims(claim, all_misinfo, top=2, threshold=0.7):
-    pair_list = []
-    for misinfo in all_misinfo:
-        score = calculate_sim_sim_matrix(claim, misinfo['misinfo'])
-        if score >= threshold:
-            pair = {'claim': claim, 'data': misinfo, 'similarity': str(score)}
-            pair_list.append(pair)
+    lang_code = detect(claim)
+    if lang_code == "bn":
+        top_misinfo = bengali_claim_checker.bengali_get_matched_claims(claim, all_misinfo, top=2, threshold=0.7)
+    else:
+        pair_list = []
+        for misinfo in all_misinfo:
+            score = calculate_sim_sim_matrix(claim, misinfo['misinfo'])
+            if score >= threshold:
+                pair = {'claim': claim, 'data': misinfo, 'similarity': str(score)}
+                pair_list.append(pair)
 
-    sorted_pair_list = sorted(pair_list, key=lambda k: k['similarity'], reverse=True)
-    top_misinfo = sorted_pair_list[0:top]
+        sorted_pair_list = sorted(pair_list, key=lambda k: k['similarity'], reverse=True)
+        top_misinfo = sorted_pair_list[0:top]
+        
     return top_misinfo
-
