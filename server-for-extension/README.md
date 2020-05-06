@@ -58,3 +58,42 @@ The API response will be something like this:
   }
 ]
 ```
+## Cache System
+Results of queries at route `/covid19/api/get_related_misinfo` is stored for quick searching. Intuiton is that when one fake-news becomes viral, most queries will be related to that. So, it makes sense to store recent queries, but that is not ideal as same fake-news can take many form. But the result always stays same for one specific fake-news with almost similar queries. Hence, only the result, in this case `objectId` of the fake-news in the database is stored, along with time of last time it was searched for. Here is the structure of a single cached fake-news.  
+```	
+{
+	"_id":{"$oid":"5eb2de55e48bdbaf1b3bc82e"},
+	"fakeNewsId":"5e920864060c77188c2d0ae9",
+	"lastAccessed":1588780629
+}
+```
+*_id* is the objectId of the cache itself, *fakeNewsId* is the objectId of the fake-news stored in *misinfo_collection*, *lastAccessed* is the unix timestamp refering to the last time this fake-news was returned. 
+
+Location of the cache is in *cache_collection* inside *covid* database on Mongo Atlas. Collection size has a  maximum length of *N*. If a fake-news needs to be cached and *cache_collection* is full, oldest cache is removed and newer one is cached.
+
+## Blacklist API
+
+The route of the API is set to **/covid19/api/get_blacklist** and supports only **POST** method. You can check the API request by sending a request like this:
+`curl -X POST https://coronafactcheck.herokuapp.com/covid19/api/get_blacklist`. It will return something like this,
+```
+{
+	"_id":{"$oid":"5eb2de71f0c94243b32e110a"},
+	"url":"www.something.com/",
+	"proof":"[www.anotherthing.com,www.otherthing.com]"
+}
+```
+As usual, *_id* is objectId, *url* is the url to be blacklisted, *proof* is a list of sources proving that *url* is rouge; it can be anything from fake-news posted by that link to news articles blaming that url.
+
+## Heroku Server
+Server is hosted on heroku. If you plan on pushing new builds to server, do the following. The safest way is to pull first, change later. 
+1. Install heroku CLI
+2. create a new directory
+3. cd into that directory and open bash.
+4. login heroku. `heroku login -i`  
+5. add existing app. `heroku git:remote -a coronafactcheck`
+6. pull existing build from heroku. `git pull heroku master`
+7. make your changes to the files.
+8. `git add .`, then `git commit -m ""`
+9. push your version. `git push heroku master`
+
+If you have already work on local files, do step 1,2,3(cd into local directory),6,8,9. Step 6 is where merge conflict may arise. 
