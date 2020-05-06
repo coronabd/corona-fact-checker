@@ -6,7 +6,7 @@ This server uses MongoDB as DBMS. You need to download and setup MongoDB in your
 
 **Mongo Atlas.** *config.py* needs to be updated as below-
 ```
-DB_HOST = <PROVIDED CONNECTION URI OF MONGO ATLAS>
+DB_HOST = <PROVIDED CONNECTION URL OF MONGO ATLAS>
 ```
  
 To calculate the similarity score, we need a pre-made dictionary which can be downloaded [here](https://drive.google.com/file/d/16Uej6m8D3ZM0oasGvPX6-Xf0czpNqqq9/view?usp=sharing). Set the path of this dictionary in **config.py** under the name of **DICTIONARY**.
@@ -96,4 +96,4 @@ Server is hosted on heroku. If you plan on pushing new builds to server, do the 
 8. `git add .`, then `git commit -m ""`
 9. push your version. `git push heroku master`
 
-If you have already work on local files, do step 1,2,3(cd into local directory),6,8,9. Step 6 is where merge conflict may arise. 
+If you have already work on local files, do step 1,3(cd into local directory),6,8,9. Step 6 is where merge conflict may arise. 
