@@ -50,10 +50,10 @@ def calculate_sim_sim_matrix(claim, misinfo):
 
 def update_caches(top_misinfo):
     """
-    updates cache collection with top results. only stores 15 most frequent fakenews.
-    if collection is maxed out, least frequent fakenews is removed. Newer fakenews takes it's place.
+    updates cache collection with top results. only stores N recent fakenews.
+    if collection is maxed out, ancientest fakenews is removed. 
     """
-    N = 8
+    N = 10
     exists = False
     cache_list = db_operation.get_all_cache()
     
@@ -61,7 +61,7 @@ def update_caches(top_misinfo):
         if i['fakeNewsId'] == top_misinfo[0]['objectId']:
             exists = True
             print(">>>>>>>>>>>>>>>>>>>>>>>> already cached")
-            break
+            return
 
     if exists==False and len(cache_list) >= N:     # not cached and cache size maxed
         cache_list = sorted(cache_list, key=lambda k: k['lastAccessed'])
