@@ -5,10 +5,11 @@ from gensim import corpora
 import string
 from flask import Flask
 import itertools
+import time 
 
 from langdetect import detect
 import bengali_claim_similarity_checker as bengali_claim_checker
-
+import database_operation as db_operation
 app = Flask(__name__)
 app.config.from_object('config')
 
@@ -47,6 +48,33 @@ def calculate_sim_sim_matrix(claim, misinfo):
     return compare_similarity(claim, misinfo)
 
 
+def update_caches(top_misinfo):
+    """
+    updates cache collection with top results. only stores 15 most frequent fakenews.
+    if collection is maxed out, least frequent fakenews is removed. Newer fakenews takes it's place.
+    """
+    N = 8
+    exists = False
+    cache_list = db_operation.get_all_cache()
+    
+    for i in cache_list:    # check if already cached
+        if i['fakeNewsId'] == top_misinfo[0]['objectId']:
+            exists = True
+            print(">>>>>>>>>>>>>>>>>>>>>>>> already cached")
+            break
+
+    if exists==False and len(cache_list) >= N:     # not cached and cache size maxed
+        cache_list = sorted(cache_list, key=lambda k: k['lastAccessed'])
+        db_operation.delete_from_cache_collection(cache_list[0]['_id'])
+
+    if exists==False:      # cache update
+        data = {}
+        data['fakeNewsId'] = top_misinfo[0]['objectId']
+        data['lastAccessed'] = int(time.time())
+        post_id = db_operation.insert_into_cache_collection(data)
+        print(">>>>>>>>>>>>>>>>>>>>>>>> posted new cache")
+
+
 def get_matched_claims(claim, all_misinfo, top=2, threshold=0.7):
     lang_code = detect(claim)
     if lang_code == "bn":
@@ -54,12 +82,16 @@ def get_matched_claims(claim, all_misinfo, top=2, threshold=0.7):
     else:
         pair_list = []
         for misinfo in all_misinfo:
+            objectId = str(misinfo['_id'])
             score = calculate_sim_sim_matrix(claim, misinfo['misinfo'])
             if score >= threshold:
-                pair = {'claim': claim, 'data': misinfo, 'similarity': str(score)}
+                keys = list(misinfo.keys())[1:]
+                plain_data = {k:misinfo[k] for k in keys if k in misinfo}
+                pair = {'claim': claim, 'data': plain_data, 'similarity': str(score),'objectId':objectId}
                 pair_list.append(pair)
 
         sorted_pair_list = sorted(pair_list, key=lambda k: k['similarity'], reverse=True)
         top_misinfo = sorted_pair_list[0:top]
-        
+    if len(top_misinfo) >0:
+        update_caches(top_misinfo)
     return top_misinfo

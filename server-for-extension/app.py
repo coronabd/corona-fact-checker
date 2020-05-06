@@ -69,5 +69,10 @@ def cb_detection():
     return jsonify(misinfo_list)
 
 
+@app.route('/covid19/api/get_blacklist', methods=['POST'])    
+def blacklist():
+    urls = db_operation.get_blacklist()
+    return json.dumps(urls)
+
 if __name__ == '__main__':
     app.run(host = '0.0.0.0',port=5005)

@@ -148,9 +148,12 @@ def bengali_get_matched_claims(claim, all_misinfo, top=2, threshold=0.7):
     claim_text = [claim]
     top_misinfo_id, dcosines = bengali_matched_claims(claim_text, text)
     for misinfo in all_misinfo:
+        objectId = str(misinfo['_id'])
         for val in top_misinfo_id:
             if misinfo['misinfo'] in text[val]:
-                pair = {'claim': claim, 'data': misinfo, 'similarity': format(dcosines[val], '.6g')}
+                keys = list(misinfo.keys())[1:]
+                plain_data = {k:misinfo[k] for k in keys if k in misinfo}
+                pair = {'claim': claim, 'data': plain_data, 'similarity': format(dcosines[val], '.6g'),'objectId':objectId}
                 pair_list.append(pair)
     
     sorted_pair_list = sorted(pair_list, key=lambda k: k['similarity'], reverse=True)
