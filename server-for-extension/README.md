@@ -4,6 +4,9 @@ To setup the server in your local machine you need to install **virtual environm
 
 This server uses MongoDB as DBMS. You need to download and setup MongoDB in your local machine. I have used **9 documents** for the initialization of the database. I have dumped the database [here](https://drive.google.com/file/d/19YLjsfMu__jdHpjjfV0JYZmLuwMIslXl/view?usp=sharing). After setting up MongoDB, you can import it on your local database. You can follow the instructions [here](https://docs.mongodb.com/manual/reference/program/mongoimport/). Replace the **MISINFO_COLLECTION** and **DB_NAME** in the **config.py** file with your database and collection name.
 
+I have added **13 Bangla documents** in **misinfo_collection** database. You can get the db from [here](https://drive.google.com/open?id=1qUNwmUoYB2GSyot8p7_DKNy3lYEIVh2X).  
+
+
 **Mongo Atlas.** *config.py* needs to be updated as below-
 ```
 DB_HOST = <PROVIDED CONNECTION URL OF MONGO ATLAS>
