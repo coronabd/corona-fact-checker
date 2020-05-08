@@ -4,6 +4,9 @@ To setup the server in your local machine you need to install **virtual environm
 
 This server uses MongoDB as DBMS. You need to download and setup MongoDB in your local machine. I have used **9 documents** for the initialization of the database. I have dumped the database [here](https://drive.google.com/file/d/19YLjsfMu__jdHpjjfV0JYZmLuwMIslXl/view?usp=sharing). After setting up MongoDB, you can import it on your local database. You can follow the instructions [here](https://docs.mongodb.com/manual/reference/program/mongoimport/). Replace the **MISINFO_COLLECTION** and **DB_NAME** in the **config.py** file with your database and collection name.
 
+I have added **13 Bangla documents** in **misinfo_collection** database. You can get the db from [here](https://drive.google.com/open?id=1qUNwmUoYB2GSyot8p7_DKNy3lYEIVh2X).  
+
+
 **Mongo Atlas.** *config.py* needs to be updated as below-
 ```
 DB_HOST = <PROVIDED CONNECTION URL OF MONGO ATLAS>
@@ -58,6 +61,48 @@ The API response will be something like this:
   }
 ]
 ```
+You can also check the API response for Bengali misinformation by sending a request like this:
+> curl -X POST http://127.0.0.1:5000/covid19/api/get_related_misinfo -F 'claim=চা পান করলে করোনা ভালো হয়ে যাব'
+The API response will be something like this:
+```javascript
+[
+    {
+        "claim": "চা পান করলে করোনা ভালো হয়ে যাবে।",
+        "data": {
+            "attached_file": "",
+            "insertion_time": "Sat, 18 Apr 2020 18:05:29 GMT",
+            "misinfo": "মাত্র আমার গ্রামের এক রিলেটিভ কল দিয়ে বললো এক গ্লাস পানিতে কয়েকটা চা পাতা নিয়ে একটা ভালো ইন্টেনশন নিয়ে খেলে করোনা ভালো হয়ে যাবে। ",
+            "misinfo_link": "",
+            "misinfo_source_type": "Facebook Post",
+            "misinfo_tags": "religious medicine",
+            "misinfo_type": "Culture",
+            "truth": "স্বাস্থ্য বিশেষজ্ঞরা বলেছেন যে COVID-19 সংক্রমণ প্রতিরোধ বা নিরাময়ে চা পান করা কার্যকর তা প্রমাণ করার জন্য পর্যাপ্ত বৈজ্ঞানিক প্রমাণ নেই; ২০২০ সালের মার্চ পর্যন্ত ওয়ার্ল্ড হেলথ অর্গানাইজেশন (ডাব্লুএইচও) বলেছে যে চায়ে কোভিড -১৯ এর কোনও নিরাময় নেই।",
+            "truth_link": "https://factcheck.afp.com/no-evidence-drinking-tea-can-cure-or-relieve-symptoms-covid-19-doctors-say",
+            "verified_by": "WHO"
+        },
+        "objectId": "5e9b416932b48d3db561661c",
+        "similarity": "0.337481"
+    },
+    {
+        "claim": "চা পান করলে করোনা ভালো হয়ে যাবে।",
+        "data": {
+            "attached_file": "",
+            "insertion_time": "Sat, 18 Apr 2020 19:18:35 GMT",
+            "misinfo": "গ্রামের সাধারাণ মানুষজন চিনি এবং লবণ ছাড়া চা পান করছে এবং তাদেরকে কেউ একজন বলেছে যে এটা ভাইরাসটি সারাতে সাহায্য করবে। এমতাবস্থায়, মানুষ আযান দিচ্ছে এবং রং চা পান করছে।",
+            "misinfo_link": "",
+            "misinfo_source_type": "Facebook Post",
+            "misinfo_tags": "",
+            "misinfo_type": "Cure",
+            "truth": "স্বাস্থ্য বিশেষজ্ঞরা বলেছেন যে COVID-19 সংক্রমণ প্রতিরোধ বা নিরাময়ে চা পান করা কার্যকর তা প্রমাণ করার জন্য পর্যাপ্ত বৈজ্ঞানিক প্রমাণ নেই; ২০২০ সালের মার্চ পর্যন্ত ওয়ার্ল্ড হেলথ অর্গানাইজেশন (ডাব্লুএইচও) বলেছে যে চায়ে কোভিড -১৯ এর কোনও নিরাময় নেই।",
+            "truth_link": "https://factcheck.afp.com/no-evidence-drinking-tea-can-cure-or-relieve-symptoms-covid-19-doctors-say",
+            "verified_by": "WHO"
+        },
+        "objectId": "5e9b528b32b48d3db5616623",
+        "similarity": "0.100622"
+    }
+]
+```
+
 ## Cache System
 Results of queries at route `/covid19/api/get_related_misinfo` is stored for quick searching. Intuiton is that when one fake-news becomes viral, most queries will be related to that. So, it makes sense to store recent queries, but that is not ideal as same fake-news can take many form. But the result always stays same for one specific fake-news with almost similar queries. Hence, only the result, in this case `objectId` of the fake-news in the database is stored, along with time of last time it was searched for. Here is the structure of a single cached fake-news.  
 ```	

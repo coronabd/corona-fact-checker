@@ -4,7 +4,8 @@
         "default_title": "Misinfo Checker"
     },
     "content_scripts": [{
-        "matches": ["https://*.facebook.com/*"],
+        "matches": ["<all_urls>"],
+        "run_at": "document_idle",
         "js": ["scripts/jquery.js", "scripts/covid19.js"],
         "css": ["assets/styles/covid19.css"]
     }],
@@ -12,8 +13,16 @@
     "manifest_version": 2,
     "name": "Covid19 Misinfo Tracker",
     "permissions": [
-        "https://*.facebook.com/*"
+        "<all_urls>",
+        "webNavigation",
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "storage"
     ],
+    "background":    {
+        "scripts": ["scripts/background.js"]
+    },
     "version": "0.0.1",
     "web_accessible_resources": [
         "scripts/jquery.js",
