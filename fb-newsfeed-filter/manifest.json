@@ -21,7 +21,7 @@
         "storage"
     ],
     "background":    {
-        "scripts": ["scripts/background.js"]
+        "scripts": ["scripts/jquery.js","scripts/background.js"]
     },
     "version": "0.0.1",
     "web_accessible_resources": [
