@@ -5,12 +5,36 @@ var pattern = ["https://www.facebook.com/lalsalu.page/posts/2769601203135709",
               "https://www.facebook.com/mh.mon.94/videos/638619193593343/",
               "https://*.bing.com/*",
               "https://www.facebook.com/mh.mon.94/*",
-            "https://*.facebook.com/tomal.ektai"];
+              "https://*.bing.com/*"];
 var currenturl = ""
+
+//post request to server
+var serverData;
+var xmlhttp = new XMLHttpRequest();
+var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_blacklist";
+//collect all the blacklisted urls in this urlList
+var urlList = [];
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+         serverData = JSON.parse(this.responseText);
+         //console.log(serverData)
+         for(i=0; i<serverData.length; i++){
+            //console.log(serverData[i]['url'])
+            urlList.push(serverData[i]['url'])
+         };
+         console.log(urlList)
+         //console.log(pattern)
+    };
+};
+xmlhttp.open("POST", url, true);
+xmlhttp.send();
+
 var requestedURL;
 // cancel function returns an object
 // which contains a property `cancel` set to `true`
 function cancel(requestDetails) {
+   console.log("working: " +urlList)
+   console.log("pattern: " +pattern)
   //TODO: handle www or w/o www
   console.log("Canceling: " + requestDetails.url);
   //display custom popup message
