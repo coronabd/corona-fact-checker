@@ -47,7 +47,7 @@ function cancel(requestDetails) {
 }
 
 
-//TODO: try to replace pattern with urlList, but not working as required, all sites are blocked
+//TODO: try to replace pattern with urlList, but not working as required, error: all sites are blocked
 // add the listener,
 // passing the filter argument and "blocking"
 chrome.webRequest.onBeforeRequest.addListener(cancel, {urls: urlList}, ["blocking"]);
