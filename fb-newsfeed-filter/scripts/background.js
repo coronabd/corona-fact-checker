@@ -25,7 +25,7 @@ xmlhttp.onreadystatechange = function() {
          //console.log(pattern)
     };
 };
-xmlhttp.open("POST", url, true);
+xmlhttp.open("POST", url, false);
 xmlhttp.send();
 
 
@@ -47,7 +47,6 @@ function cancel(requestDetails) {
 }
 
 
-//TODO: try to replace pattern with urlList, but not working as required, error: all sites are blocked
 // add the listener,
 // passing the filter argument and "blocking"
 chrome.webRequest.onBeforeRequest.addListener(cancel, {urls: urlList}, ["blocking"]);
