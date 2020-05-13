@@ -209,6 +209,17 @@ $(document).ready(function() {
         //     .fail(function onError(xhr, status, error) {
         //         console.log(error);
         //     })
+
+        // Sending postData.post as claim to server
+        $.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo",{ claim: postData.post })
+            .done(function onSuccess(result) {
+                 console.log(result)
+                 //_handlemisinfoApiSuccess(result, node, postData);
+            })
+            .fail(function onError(xhr, status, error) {
+                   console.log(error)
+            })
+
     };
     //
     // var _getOriginalLinkFromFacebookLink = function(link) {
@@ -259,15 +270,20 @@ $(document).ready(function() {
         });
     };
 
+
     (function init() {
         if (document.URL.match("http(s|):\/\/(www.|)facebook")) {
             IS_FACEBOOK = true;
+            console.log("FACEBOOK")
         }
 
         if (IS_FACEBOOK) {
             console.log("Covid19 Misinfo Tracker Active on Facebook");
             document.onscroll = loop;
             loop();
+        }
+        if (document.URL.match("chrome-extension://gnhebepcgnigbabpfmadgdmbdjffmged/templates/blockmsg.html")){
+            alert("OH HEY   ")
         }
     })();
 });
