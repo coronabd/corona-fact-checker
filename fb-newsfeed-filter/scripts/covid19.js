@@ -259,15 +259,20 @@ $(document).ready(function() {
         });
     };
 
+
     (function init() {
         if (document.URL.match("http(s|):\/\/(www.|)facebook")) {
             IS_FACEBOOK = true;
+            console.log("FACEBOOK")
         }
 
         if (IS_FACEBOOK) {
             console.log("Covid19 Misinfo Tracker Active on Facebook");
             document.onscroll = loop;
             loop();
+        }
+        if (document.URL.match("chrome-extension://gnhebepcgnigbabpfmadgdmbdjffmged/templates/blockmsg.html")){
+            alert("OH HEY   ")
         }
     })();
 });
