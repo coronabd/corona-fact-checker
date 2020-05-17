@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var IS_FACEBOOK = false;
 
     var facebook_link_post_container_text_wrapper = '._6m2._1zpr.clearfix._dcs';
@@ -18,9 +18,9 @@ $(document).ready(function() {
     var facbook_shared_post_container_class = '.mtm._5pco';
 
 
-    var _handleClickbairReport = function(postData) {
-      alert("Feedback received. Thanks!!");
-      //will handle this API call later. Currently only alert.
+    var _handleClickbairReport = function (postData) {
+        alert("Feedback received. Thanks!!");
+        //will handle this API call later. Currently only alert.
         // postData.feedback = 'dislike';
         // console.log(postData);
         // $.post(API_FEEDBACK, postData)
@@ -34,18 +34,18 @@ $(document).ready(function() {
         //     })
     };
     //
-    var _getmisinfoLabelId = function(count) {
+    var _getmisinfoLabelId = function (count) {
         return 'misinfoLabel_' + count;
     };
-    var _getmisinfoPopupId = function(count) {
+    var _getmisinfoPopupId = function (count) {
         return 'misinfoPopup_' + count;
     };
-    var _getmisinfoWrapperId = function(count) {
+    var _getmisinfoWrapperId = function (count) {
         return 'misinfoMarkerWrapper_' + count;
     };
     //
-    var _handlefeedbackButtonClick = function(postData) {
-      alert("Feedback received. Thanks!!");
+    var _handlefeedbackButtonClick = function (postData) {
+        alert("Feedback received. Thanks!!");
         // console.log(postData);
         // $.post(API_FEEDBACK, postData)
         //     .done(function onSuccess(result) {
@@ -59,7 +59,7 @@ $(document).ready(function() {
     };
     //
     //
-    var _getmisinfoInfoElement = function(data, id, postData) {
+    var _getmisinfoInfoElement = function (data, id, postData) {
         var element = $("<div class='misinfo-marker-info-wrapper' style='font-size: 15px;'></div>");
         element.attr('id', _getmisinfoPopupId(id));
 
@@ -90,7 +90,7 @@ $(document).ready(function() {
         feedbackButton.html('This should not be a Misinfo')
         feedbackButton.css('color', '#ff9022')
 
-        feedbackButton.click(function(e) {
+        feedbackButton.click(function (e) {
             _handlefeedbackButtonClick(postData);
         });
 
@@ -112,7 +112,7 @@ $(document).ready(function() {
     }
     //
     //
-    var _handlemisinfoApiSuccess = function(result, node, postData) {
+    var _handlemisinfoApiSuccess = function (result, node, postData) {
         misinfoCount = misinfoCount + 1;
 
 
@@ -133,7 +133,7 @@ $(document).ready(function() {
             var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
             infoElement.append(closeButton);
 
-            closeButton.click(function(e) {
+            closeButton.click(function (e) {
                 infoElement.fadeOut('medium');
             });
 
@@ -142,7 +142,7 @@ $(document).ready(function() {
             var nodeToFind = $("div[class='mtm']"); // look for div with only class = mtm; other posts had two classes --> mtm _5pco or mtm xxxx which caused multiple addition of the wrapper
             node.find(nodeToFind).before(misinfoMarkerWrapper);
 
-            misinfoMarker.click(function(e) {
+            misinfoMarker.click(function (e) {
                 infoElement.fadeIn('medium');
             });
         } else {
@@ -151,7 +151,7 @@ $(document).ready(function() {
             reportButtonWrapper.find('a').removeClass('UFILikeLink _4x9- _4x9_ _48-k');
             reportButtonWrapper.find('a').html('Report Misinfo');
             reportButtonWrapper.find('a').css('color', '#ff9022');
-            reportButtonWrapper.click(function(e) {
+            reportButtonWrapper.click(function (e) {
                 _handleClickbairReport(postData);
             });
             node.find('._42nr').append(reportButtonWrapper);
@@ -160,7 +160,7 @@ $(document).ready(function() {
 
 
     // Function to prepare API call to the server and handle response
-    var _callmisinfoApi = function(title, text, linkUrl, post, shared_post, node) {
+    var _callmisinfoApi = function (title, text, linkUrl, post, shared_post, node) {
         var postData = {
             title: title,
             text: text,
@@ -170,23 +170,23 @@ $(document).ready(function() {
         };
 
         var misinfo_result = {
-          "data": {
-            "decision": "misinfo",
-            "confidence": "0.90",
-            "explanation": "Why it is misinfo?",
-            "verified_by": "snoops.com",
-            "verification_link": "www.verified.com"
-          }
+            "data": {
+                "decision": "misinfo",
+                "confidence": "0.90",
+                "explanation": "Why it is misinfo?",
+                "verified_by": "snoops.com",
+                "verification_link": "www.verified.com"
+            }
         };
 
         var non_misinfo_result = {
-          "data": {
-            "decision": "non_misinfo",
-            "confidence": "0.90",
-            "explanation": "Why it is misinfo?",
-            "verified_by": "snoops.com",
-            "verification_link": "www.verified.com"
-          }
+            "data": {
+                "decision": "non_misinfo",
+                "confidence": "0.90",
+                "explanation": "Why it is misinfo?",
+                "verified_by": "snoops.com",
+                "verification_link": "www.verified.com"
+            }
         };
 
         // will handle the API call later. Currently working with some dummy data.
@@ -217,8 +217,8 @@ $(document).ready(function() {
     // }
     //
     // Function to search Facebook and find all the links
-    var loop = function() {
-        $(facebook_link_post_container).each(function(obj) {
+    var loop = function () {
+        $(facebook_link_post_container).each(function (obj) {
             var nodeObj = $(this);
 
             // if node has already been checked
@@ -259,10 +259,49 @@ $(document).ready(function() {
         });
     };
 
+    // INSERT MISINFORMATION MODAL IN FACEBOOK DOM
+    // TODO- 1. from where to fetch clean data, 2. show only in newsfeed, 3. decide when not to show, showing multiple times 
+    // in a session will disturb people, 4. to solve point 3, create extension option_page, 5. read more on session storage
+    function modalShow() {
+        var recentData;
+        var modalTitle = "Recently Spreaded Fake-news about Covid19"
+        $.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo", { claim: "Corona tea" })
+            .done(function onSuccess(result) {
+                var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="staticBackdropLabel">'+modalTitle+'</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+                var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">More on CORONAFACTCHECK.NET</a></div></div></div></div>'
+                var bodyTop = '<div class="modal-body"><ul class="list-group">'
+                var bodyBottom = '</ul></div>'
+                var i;
+                var tempDiv;
+                var fake;
+                var truth;
+                for(i=0; i<result.length; i++){
+                    fake = result[i].data.misinfo;
+                    truth = result[i].data.truth;
+                    source = result[i].data.truth_link;
+                    tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> '+fake+'</div><div id="truth"><strong class="text-success">Truth:</strong> '+truth+'</div><div id="source"><strong class="text-secondary">Source: </strong> '+source+'</div></li>';
+                    bodyTop += tempDiv;
+                }
+                
+                
+                var modal = top + bodyTop + bodyBottom + bottom;
+
+                $("body").append(modal)
+                $('#misinfomodal').modal({
+                    keyboard: true
+                })
+                $('#misinfomodal').modal("toggle");
+            })
+            .fail(function onError(xhr, status, error) {
+                console.log(error)
+            })
+
+    }
 
     (function init() {
         if (document.URL.match("http(s|):\/\/(www.|)facebook")) {
             IS_FACEBOOK = true;
+            modalShow();
             console.log("FACEBOOK")
         }
 
@@ -270,9 +309,6 @@ $(document).ready(function() {
             console.log("Covid19 Misinfo Tracker Active on Facebook");
             document.onscroll = loop;
             loop();
-        }
-        if (document.URL.match("chrome-extension://gnhebepcgnigbabpfmadgdmbdjffmged/templates/blockmsg.html")){
-            alert("OH HEY   ")
         }
     })();
 });

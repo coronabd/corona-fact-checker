@@ -44,7 +44,7 @@ function cancel(requestDetails) {
   // return {redirectUrl: chrome.extension.getURL("templates/blockmsg.html") };
   return {redirectUrl: chrome.extension.getURL("templates/blockmsg.html"+"?&from="+currenturl+"&blocked="+requestedURL)};
 
-  return {cancel: true};
+  // return {cancel: true};
 }
 
 
