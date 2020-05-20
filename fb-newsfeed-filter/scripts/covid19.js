@@ -260,11 +260,14 @@ $(document).ready(function () {
     };
 
     // INSERT MISINFORMATION MODAL IN FACEBOOK DOM
-    // TODO- 1. from where to fetch clean data, 2. show only in newsfeed, 3. decide when not to show, showing multiple times 
-    // in a session will disturb people, 4. to solve point 3, create extension option_page, 5. read more on session storage
+    // TODO- 1. from where to fetch clean data, 
+    // 2. show only in newsfeed,
+    //  3. decide when not to show, showing multiple times in a session will disturb people, 
+    // 4. to solve point 3, create extension option_page, 
+    // 5. read more on session storage
     function modalShow() {
-        var recentData;
         var modalTitle = "Most Recent Fake-news about Covid19"
+        
         $.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo", { claim: "Corona tea" })
             .done(function onSuccess(result) {
                 var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">'+modalTitle+'</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
@@ -282,8 +285,6 @@ $(document).ready(function () {
                     tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> '+fake+'</div><div id="truth"><strong class="text-success">Truth:</strong> '+truth+'</div><div id="source"><strong class="text-secondary">Source: </strong> '+source+'</div></li>';
                     bodyTop += tempDiv;
                 }
-                
-                
                 var modal = top + bodyTop + bodyBottom + bottom;
 
                 $("body").append(modal)
@@ -291,6 +292,7 @@ $(document).ready(function () {
                     keyboard: true
                 })
                 $('#misinfomodal').modal("toggle");
+             
             })
             .fail(function onError(xhr, status, error) {
                 console.log(error)
@@ -298,10 +300,27 @@ $(document).ready(function () {
 
     }
 
+    function modalAutoSetup(){
+        var flag;        
+        chrome.runtime.sendMessage({msg: "sendcookie"}, function(response) {
+            flag = response.msg; // cookie
+            if(flag=="shown"){
+                console.log("[content] shown");
+            }
+            else{
+                modalShow();
+                console.log("[content] modal ran");
+                chrome.runtime.sendMessage({msg: "setcookie"}); 
+            }
+        });
+    }
+
     (function init() {
         if (document.URL.match("http(s|):\/\/(www.|)facebook")) {
             IS_FACEBOOK = true;
-            modalShow();
+            chrome.runtime.sendMessage({msg: "checkcookie"}); // queries a cookie beforehand
+            modalAutoSetup();
+            
             console.log("FACEBOOK")
         }
 

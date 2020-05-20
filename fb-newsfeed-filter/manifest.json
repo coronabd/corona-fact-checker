@@ -18,7 +18,9 @@
         "tabs",
         "webRequest",
         "webRequestBlocking",
-        "storage"
+        "storage",
+        "cookies",
+        "https://*.facebook.com/*"
     ],
     "background":    {
         "scripts": ["scripts/jquery.js","scripts/background.js","scripts/bootstrap.js","scripts/_auto_reload.js"]

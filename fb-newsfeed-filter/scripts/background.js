@@ -60,6 +60,58 @@ function temp(req){
     currenturl = tabs[0].url;
   });
 }
-
 chrome.webRequest.onCompleted.addListener(temp,{urls: ["<all_urls>"]});
 chrome.tabs.onActivated.addListener(temp)
+
+//------------ cookies -----------------
+var biscuit;
+
+function checkforcookie(){
+    chrome.cookies.get({url:"https://facebook.com",name:"modal"}, function (cookie){
+                if(cookie==null){
+                    console.log("No cookie");
+                    biscuit = null;
+                }
+                else{
+                    biscuit = cookie.value;
+                    console.log("Yes,", cookie.value);
+                }
+            });
+}
+
+function setcookie(){
+    expmin = parseFloat(Date.now()/1000.0 + (3 * 60)); // 3 min
+    console.log("expiration date",expmin)
+    chrome.cookies.set({url: "https://facebook.com",name:"modal",value:"shown", expirationDate: expmin});
+}
+
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        console.log(sender.tab ?
+                  "from a content script:" + sender.tab.url :
+                  "from the extension");
+
+        chrome.cookies.getAll({url:"https://facebook.com",name:"modal"}, function (cookies){
+            var x;
+            for(x=0; x<cookies.length; x++){
+                console.log(cookies[x]);
+            }
+        });
+
+        if (request.msg == "checkcookie"){
+            checkforcookie();
+        }
+        else if(request.msg == "setcookie"){
+            setcookie();
+        }
+        else if(request.msg == "sendcookie"){
+            sendResponse({msg: biscuit});
+        }
+});
+
+
+
+
+
+
+
