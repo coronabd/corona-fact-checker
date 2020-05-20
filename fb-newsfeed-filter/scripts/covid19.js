@@ -270,7 +270,7 @@ $(document).ready(function () {
         
         $.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo", { claim: "Corona tea" })
             .done(function onSuccess(result) {
-                var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">'+modalTitle+'</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+                var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
                 var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">More on CORONAFACTCHECK.NET</a></div></div></div></div>'
                 var bodyTop = '<div class="modal-body"><ul class="list-group">'
                 var bodyBottom = '</ul></div>'
@@ -278,11 +278,11 @@ $(document).ready(function () {
                 var tempDiv;
                 var fake;
                 var truth;
-                for(i=0; i<result.length; i++){
+                for (i = 0; i < result.length; i++) {
                     fake = result[i].data.misinfo;
                     truth = result[i].data.truth;
                     source = result[i].data.truth_link;
-                    tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> '+fake+'</div><div id="truth"><strong class="text-success">Truth:</strong> '+truth+'</div><div id="source"><strong class="text-secondary">Source: </strong> '+source+'</div></li>';
+                    tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> ' + fake + '</div><div id="truth"><strong class="text-success">Truth:</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
                     bodyTop += tempDiv;
                 }
                 var modal = top + bodyTop + bodyBottom + bottom;
@@ -292,7 +292,7 @@ $(document).ready(function () {
                     keyboard: true
                 })
                 $('#misinfomodal').modal("toggle");
-             
+
             })
             .fail(function onError(xhr, status, error) {
                 console.log(error)
@@ -300,27 +300,40 @@ $(document).ready(function () {
 
     }
 
-    function modalAutoSetup(){
-        var flag;        
-        chrome.runtime.sendMessage({msg: "sendcookie"}, function(response) {
+    function modalAutoSetup() {
+        var flag;
+        chrome.runtime.sendMessage({ msg: "sendcookie" }, function (response) {
             flag = response.msg; // cookie
-            if(flag=="shown"){
+            if (flag == "shown") {
                 console.log("[content] shown");
             }
-            else{
+            else {
                 modalShow();
                 console.log("[content] modal ran");
-                chrome.runtime.sendMessage({msg: "setcookie"}); 
+                chrome.runtime.sendMessage({ msg: "setcookie" });
             }
         });
     }
-
     (function init() {
+
+        // message listener for whole content script
+        chrome.runtime.onMessage.addListener(
+            function (request, sender, sendResponse) {
+                console.log(sender.tab ?
+                    "from a content script:" + sender.tab.url :
+                    "from the extension");
+
+                if (request.msg == "modalforuser") {
+                    modalShow();
+                }
+            });
+
+
         if (document.URL.match("http(s|):\/\/(www.|)facebook")) {
             IS_FACEBOOK = true;
-            chrome.runtime.sendMessage({msg: "checkcookie"}); // queries a cookie beforehand
+            chrome.runtime.sendMessage({ msg: "checkcookie" }); // queries a cookie beforehand
             modalAutoSetup();
-            
+
             console.log("FACEBOOK")
         }
 
@@ -331,3 +344,5 @@ $(document).ready(function () {
         }
     })();
 });
+
+

@@ -1,8 +1,5 @@
 {
     "author": "Covid19 Misinfo Team",
-    "browser_action": {
-        "default_title": "Misinfo Checker"
-    },
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "run_at": "document_idle",
@@ -22,6 +19,10 @@
         "cookies",
         "https://*.facebook.com/*"
     ],
+    "browser_action":{
+        "default_title": "Corona Fact Check",
+        "default_popup": "templates/popup.html"
+    },
     "background":    {
         "scripts": ["scripts/jquery.js","scripts/background.js","scripts/bootstrap.js","scripts/_auto_reload.js"]
     },
