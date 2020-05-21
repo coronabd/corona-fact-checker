@@ -349,8 +349,8 @@ $(document).ready(function() {
             linkObj.mouseleave();
            // _callmisinfoApi(title, text, link, post, shared_post, nodeObj);
 
-            if(post.includes('Coronavirus') || post.includes('করোনা'|| post.includes('corona'))){
-            _showMisinfoMarker(title, text, link, post, shared_post, nodeObj);
+            if(post.includes('Coronavirus') || post.includes('করোনা')|| post.includes('corona')){
+                _showMisinfoMarker(title, text, link, post, shared_post, nodeObj);
             }
 
         });
