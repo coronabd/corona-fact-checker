@@ -17,6 +17,7 @@ $(document).ready(function() {
     var misinfo_feedback_button_class = 'misinfo-checker-feedback-button';
     var facbook_shared_post_container_class = '.mtm._5pco';
 
+    var serverData;
 
     var _handleClickbairReport = function(postData) {
       alert("Feedback received. Thanks!!");
@@ -112,7 +113,7 @@ $(document).ready(function() {
     }
     //
     //
-    var _handlemisinfoApiSuccess = function(result, node, postData) {
+     var _handlemisinfoApiSuccess = function(result, node, postData) {
         misinfoCount = misinfoCount + 1;
 
 
@@ -198,7 +199,7 @@ $(document).ready(function() {
         // }
         // else {
         //   _handlemisinfoApiSuccess(non_misinfo_result.data, node, postData);
-        // }
+        // }_callmisinfoApi
 
 
         // $.post(API_URL, postData)
@@ -213,20 +214,102 @@ $(document).ready(function() {
         // Sending postData.post as claim to server
         $.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo",{ claim: postData.post })
             .done(function onSuccess(result) {
-                 console.log(result)
-                 //_handlemisinfoApiSuccess(result, node, postData);
+                 console.log(result[0]['data'])
+                 _handlemisinfoApiSuccess(result, node, postData);
             })
             .fail(function onError(xhr, status, error) {
                    console.log(error)
             })
 
     };
+
     //
     // var _getOriginalLinkFromFacebookLink = function(link) {
     //     var matchBegin = "php?u=";
     //     return link.substring(link.lastIndexOf(matchBegin) + matchBegin.length, link.lastIndexOf("&h="));
     // }
-    //
+
+    //After clicking the 'Possible misinfo" bar, show the information block
+     var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node) {
+
+            var postData = {
+            title: title,
+            text: text,
+            url: linkUrl,
+            post: post,
+            sharedPost: shared_post
+        };
+
+        misinfoCount = misinfoCount + 1;
+
+        //var ismisinfo = misinfo_result.decision === 'misinfo';
+        var misinfoMarker = $("<div class='misinfo-marker-span'></div>");
+        misinfoMarker.attr('id', _getmisinfoLabelId(misinfoCount));
+
+
+        misinfoMarker.addClass('misinfo-marker-is-misinfo');
+        misinfoMarker.text('Potential Misinfo! - Click here to read more');
+        var misinfoMarkerWrapper = $("<div class='misinfo-marker-wrapper'></div>");
+        misinfoMarkerWrapper.attr('id', _getmisinfoWrapperId(misinfoCount));
+        misinfoMarkerWrapper.append(misinfoMarker);
+
+
+        var nodeToFind = $("div[class='_1dwg _1w_m _q7o']"); // look for div with only class = mtm; other posts had two classes --> mtm _5pco or mtm xxxx which caused multiple addition of the wrapper
+        node.find(nodeToFind).after(misinfoMarkerWrapper);   // change mtm to _1dwg _1w_m _q7o
+
+        misinfoMarker.click(function(e) {
+            /*$.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo",{ claim: postData.post })
+            .done(function onSuccess(result) {
+                 console.log(result)
+                 var result = result;
+                 //_handlemisinfoApiSuccess(result, node, postData);
+            })
+            .fail(function onError(xhr, status, error) {
+                   console.log(error)
+            })*/
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo?claim="+postData.post;
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                serverData = JSON.parse(this.responseText);
+                console.log(serverData[0]['data'])
+                };
+            };
+        xmlhttp.open("POST", url, false);
+        xmlhttp.send();
+
+        var sim_score = serverData[0]['similarity']
+        if(sim_score > 0.1){
+
+        var misinfo_result = {
+              "data": {
+                "decision": serverData[0]['data']['misinfo'],
+                "confidence": serverData[0]['similarity'],
+                "explanation": serverData[0]['data']['truth'],
+                "verified_by": serverData[0]['data']['verified_by'],
+                "verification_link": serverData[0]['data']['truth_link']
+              }
+            };
+        console.log(misinfo_result)
+        var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfoCount, postData);
+        console.log("info", infoElement);
+
+        var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
+        infoElement.append(closeButton);
+
+            closeButton.click(function(e) {
+                infoElement.fadeOut('medium');
+            });
+
+            infoElement.hide();
+            misinfoMarkerWrapper.append(infoElement);
+
+            infoElement.fadeIn('medium');
+            }
+            });
+
+    };
+
     // Function to search Facebook and find all the links
     var loop = function() {
         $(facebook_link_post_container).each(function(obj) {
@@ -254,8 +337,6 @@ $(document).ready(function() {
             // link is the url of the shared content (news article, video etc.)
             var link = linkObj.attr('href');
 
-
-
             // title is the headline of a news article or video
             // text is the subtitle or thumbnail text
             var text = nodeObj.find(facebook_link_post_container_text).text();
@@ -266,7 +347,12 @@ $(document).ready(function() {
             // if (text) console.log('text', text);
             // if (title) console.log('title', title);
             linkObj.mouseleave();
-            _callmisinfoApi(title, text, link, post, shared_post, nodeObj);
+           // _callmisinfoApi(title, text, link, post, shared_post, nodeObj);
+
+            if(post.includes('Coronavirus') || post.includes('করোনা'|| post.includes('corona'))){
+            _showMisinfoMarker(title, text, link, post, shared_post, nodeObj);
+            }
+
         });
     };
 
