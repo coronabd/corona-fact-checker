@@ -5,7 +5,5 @@ $("#seefake").click(function () {
 	//});
 
 	console.log("clicked");
-	chrome.runtime.sendMessage({ msg: "checkcacheforuser" }, function (response) {
-		console.log('message send');
-	});
+	chrome.runtime.sendMessage({ msg: "checkcacheforuser" });
 });

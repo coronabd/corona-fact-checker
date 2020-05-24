@@ -369,7 +369,7 @@ $(document).ready(function () {
             IS_FACEBOOK = true;
             chrome.runtime.sendMessage({ msg: "checkcookie" }); // queries a cookie beforehand
             modalAutoSetup(); // this needs to be called only if the tab is selected
-
+            
             console.log("FACEBOOK")
         }
 

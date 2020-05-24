@@ -20,3 +20,52 @@ edit the following in `scripts/covid19.js`
 
 - `_handlemisinfoApiSuccess`: This function create a warning sign (HTML) and adds to DOM if the post is misinfo
 
+# Contributor Guide
+## Current Structure
+Event listeners in `background.js`:
+* chrome.webRequest.onBeforeRequest: blocks URL after matching URL pattern
+* chrome.webRequest.onCompleted: works on capturing URL of current tab to show in `blockmsg.html`
+* chrome.tabs.onActivated: same as above. 
+* chrome.runtime.onMessage: listens to incoming messages from other scripts. 
+
+Function structure in `covid10.js`:
+```
+# IN init()
+  if facebook domain: 
+    message "checkcookie" sent to background.js.
+    modalAutoSetup()
+  
+# IN modalAutoSetup() 
+  message "sendcookie" sent to background.js
+    IN callback
+      flag <- response
+      if flag is 'shown':
+        do nothing
+      else:
+        message "checkcache" sent to background.js
+        message "setcookie" sent to background.js
+
+# IN chrome.runtime.onMessage listener
+  if message is not empty:
+    modalShow(1,message)
+  else:
+    modalShow(0)
+
+# IN modalShow(cache=false,result=null)
+  if cache is false:
+    gets data from server using POST
+  else if cache is true:
+    builds bootstrap modal using a loop
+    appends that modal to the body of current tab
+    shows the modal 
+```
+Function structure in `background.js`:
+```
+IN chrome.runtime.onMessage listener
+  if message sent from tab:
+    tab <- tabid
+  else:
+    tab <- current selected tabid in current selected window
+  
+```
+

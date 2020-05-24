@@ -90,10 +90,19 @@ function setcookie() {
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
+	    var tab;
         console.log(sender.tab ?
             "from a content script:" + sender.tab.url :
             "to the extension");
-        var tab = sender.tab.id // from where message is sent 	
+	    if(sender.tab){
+
+        	tab = sender.tab.id // from where message is sent 	
+	    }
+	    else{
+		    chrome.tabs.query({active: true, currentWindow: true},function(tabs){
+			tab = tabs[0].id;
+		    })
+	    }
 	    console.log('this tab is calling the shots'+tab)
         if (request.msg == "checkcookie") {
             checkforcookie(tab);
