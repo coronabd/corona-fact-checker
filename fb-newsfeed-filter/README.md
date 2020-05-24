@@ -78,6 +78,12 @@ Event listeners in `background.js`:
 * chrome.tabs.onActivated: same as above. 
 * chrome.runtime.onMessage: listens to incoming messages from other scripts. 
 
+Function strucure in `popup.js`:
+```
+on button click #seefake:
+  message "checkcache" sent to background.js
+```
+
 ## Todo
 1. Change data acess point for modal
 2. Update stylesheet for `popup.html`
