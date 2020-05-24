@@ -265,50 +265,81 @@ $(document).ready(function () {
     //  3. decide when not to show, showing multiple times in a session will disturb people, 
     // 4. to solve point 3, create extension option_page, 
     // 5. read more on session storage
-    function modalShow() {
+    function modalShow(cache = 0, result = null) {  // cache true of false
         var modalTitle = "Most Recent Fake-news about Covid19"
-        
-        $.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo", { claim: "Corona tea" })
-            .done(function onSuccess(result) {
-                var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-                var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">More on CORONAFACTCHECK.NET</a></div></div></div></div>'
-                var bodyTop = '<div class="modal-body"><ul class="list-group">'
-                var bodyBottom = '</ul></div>'
-                var i;
-                var tempDiv;
-                var fake;
-                var truth;
-                for (i = 0; i < result.length; i++) {
-                    fake = result[i].data.misinfo;
-                    truth = result[i].data.truth;
-                    source = result[i].data.truth_link;
-                    tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> ' + fake + '</div><div id="truth"><strong class="text-success">Truth:</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
-                    bodyTop += tempDiv;
-                }
-                var modal = top + bodyTop + bodyBottom + bottom;
+        if (cache == 0) {
 
-                $("body").append(modal)
-                $('#misinfomodal').modal({
-                    keyboard: true
+
+            $.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo", { claim: "Corona tea" })
+                .done(function onSuccess(result) {
+
+                    var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+                    var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">More on CORONAFACTCHECK.NET</a></div></div></div></div>'
+                    var bodyTop = '<div class="modal-body"><ul class="list-group">'
+                    var bodyBottom = '</ul></div>'
+                    var i;
+                    var tempDiv;
+                    var fake;
+                    var truth;
+                    for (i = 0; i < result.length; i++) {
+
+                        fake = result[i].data.misinfo;
+                        truth = result[i].data.truth;
+                        source = result[i].data.truth_link;
+                        tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> ' + fake + '</div><div id="truth"><strong class="text-success">Truth:</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
+                        bodyTop += tempDiv;
+                    }
+                    var modal = top + bodyTop + bodyBottom + bottom;
+
+                    $("body").append(modal)
+                    $('#misinfomodal').modal({
+                        keyboard: true
+                    })
+
                 })
-                $('#misinfomodal').modal("toggle");
+                .fail(function onError(xhr, status, error) {
+                    console.log(error)
+                })
+        }
+        else {
 
-            })
-            .fail(function onError(xhr, status, error) {
-                console.log(error)
-            })
+            var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+            var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">More on CORONAFACTCHECK.NET</a></div></div></div></div>'
+            var bodyTop = '<div class="modal-body"><ul class="list-group">'
+            var bodyBottom = '</ul></div>'
+            var i;
+            var tempDiv;
+            var fake;
+            var truth;
+            for (i = 0; i < result.length; i++) {
 
+                fake = result[i].data.misinfo;
+                truth = result[i].data.truth;
+                source = result[i].data.truth_link;
+                tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> ' + fake + '</div><div id="truth"><strong class="text-success">Truth:</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
+                bodyTop += tempDiv;
+            }
+            var modal = top + bodyTop + bodyBottom + bottom;
+
+            $("body").append(modal)
+            $('#misinfomodal').modal({
+                keyboard: true
+            })
+        }
+
+        $('#misinfomodal').modal("toggle");
     }
 
     function modalAutoSetup() {
         var flag;
+        console.log("Modal Auto Setup running");
         chrome.runtime.sendMessage({ msg: "sendcookie" }, function (response) {
             flag = response.msg; // cookie
             if (flag == "shown") {
                 console.log("[content] shown");
             }
             else {
-                modalShow();
+                chrome.runtime.sendMessage({ msg: "checkcache" });
                 console.log("[content] modal ran");
                 chrome.runtime.sendMessage({ msg: "setcookie" });
             }
@@ -322,9 +353,14 @@ $(document).ready(function () {
                 console.log(sender.tab ?
                     "from a content script:" + sender.tab.url :
                     "from the extension");
-
-                if (request.msg == "modalforuser") {
-                    modalShow();
+                // comes from popup.js
+                if (jQuery.isEmptyObject(request.msg) == false) { // cache found 
+                    console.log("cache found")
+                    modalShow(1, request.msg); // 
+                }
+                else if (jQuery.isEmptyObject(request.msg)) { // no cache found
+                    console.log("cache not found");
+                    modalShow(0);
                 }
             });
 
@@ -332,7 +368,7 @@ $(document).ready(function () {
         if (document.URL.match("http(s|):\/\/(www.|)facebook")) {
             IS_FACEBOOK = true;
             chrome.runtime.sendMessage({ msg: "checkcookie" }); // queries a cookie beforehand
-            modalAutoSetup();
+            modalAutoSetup(); // this needs to be called only if the tab is selected
 
             console.log("FACEBOOK")
         }
