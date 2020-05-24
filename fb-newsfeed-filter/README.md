@@ -22,11 +22,6 @@ edit the following in `scripts/covid19.js`
 
 # Contributor Guide
 ## Current Structure
-Event listeners in `background.js`:
-* chrome.webRequest.onBeforeRequest: blocks URL after matching URL pattern
-* chrome.webRequest.onCompleted: works on capturing URL of current tab to show in `blockmsg.html`
-* chrome.tabs.onActivated: same as above. 
-* chrome.runtime.onMessage: listens to incoming messages from other scripts. 
 
 Function structure in `covid10.js`:
 ```
@@ -67,5 +62,24 @@ IN chrome.runtime.onMessage listener
   else:
     tab <- current selected tabid in current selected window
   
+  if message is 'checkcookie':
+    checkforcookie(tab)
+  else if message is 'setcookie':
+    setcookie()
+  else if message is 'sendcookie':
+    existing cookie is sent to tab
+  else if message is 'checkcache':
+    cache <- get cache from local storage
+    send cache to tab
 ```
+Event listeners in `background.js`:
+* chrome.webRequest.onBeforeRequest: blocks URL after matching URL pattern
+* chrome.webRequest.onCompleted: works on capturing URL of current tab to show in `blockmsg.html`
+* chrome.tabs.onActivated: same as above. 
+* chrome.runtime.onMessage: listens to incoming messages from other scripts. 
 
+## Todo
+1. Change data acess point for modal
+2. Update stylesheet for `popup.html`
+3. Fix asynchronous issues with `background.js | setcookie(), checkforcookie()`. Sometimes, fast reload of page still shows the modal even thought cookie exists at that moment
+4. Create webhook or similar system in `background.js` to push notification of new fake-news
