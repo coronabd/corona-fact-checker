@@ -2,16 +2,28 @@
 
 To setup the server in your local machine you need to install **virtual environment** and then create an environment from **requirements.txt**. To check how to setup virtual environment follow [this link](https://docs.python.org/3/tutorial/venv.html)
 
-This server uses MongoDB as DBMS. You need to download and setup MongoDB in your local machine. I have used **9 documents** for the initialization of the database. I have dumped the database [here](https://drive.google.com/file/d/19YLjsfMu__jdHpjjfV0JYZmLuwMIslXl/view?usp=sharing). After setting up MongoDB, you can import it on your local database. You can follow the instructions [here](https://docs.mongodb.com/manual/reference/program/mongoimport/). Replace the **MISINFO_COLLECTION** and **DB_NAME** in the **config.py** file with your database and collection name.
 
 I have added **13 Bangla documents** in **misinfo_collection** database. You can get the db from [here](https://drive.google.com/open?id=1qUNwmUoYB2GSyot8p7_DKNy3lYEIVh2X).  
 
+## MongoDB
+This server uses MongoDB as DBMS. You can either setup MongoDB in your local machine, or use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) in cloud. 
 
-**Mongo Atlas.** *config.py* needs to be updated as below-
+### Local Machine
+You need to download and setup MongoDB in your local machine. I have used **9 documents** for the initialization of the database. I have dumped the database [here](https://drive.google.com/file/d/19YLjsfMu__jdHpjjfV0JYZmLuwMIslXl/view?usp=sharing). After setting up MongoDB, you can import it on your local database. You can follow the instructions [here](https://docs.mongodb.com/manual/reference/program/mongoimport/). Replace the **MISINFO_COLLECTION** and **DB_NAME** in the **config.py** file with your database and collection name.
+
+### MongoDB Atlas
+For testing purposes sign up using another email. After signing in, create a new cluster from the dashboard. Then create a Database, a collection. To get connection string- 
+1. Click on `CONNECT`
+2. `Connect to your application`
+3. follow the given instruction, such as setting up dbUser, dbPass. 
+4. in *select your driver and version* select Driver=Python, Version=3.4 or later
+5. Copy the connection string. It will be something like this: mongodb://riy:<password>@cluster0-shard-00-00-otmbj.mongodb.net:27017,cluster0-shard-00-01-otmbj.mongodb.net:27017,cluster0-shard-00-02-otmbj.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority
+6. Paste the connection string in `config.py`. The connection string is just a sample. You need to replace <password> with your database password that you set up in step 3. Also the database name in the string is *test*. Unless your database name is also *test*, you need to replace it with your database name. For example, the string in step 5 has database name test in bold: mongodb://riy:<password>@cluster0-shard-00-00-otmbj.mongodb.net:27017,cluster0-shard-00-01-otmbj.mongodb.net:27017,cluster0-shard-00-02-otmbj.mongodb.net:27017/**test**?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority
 ```
 DB_HOST = <PROVIDED CONNECTION URL OF MONGO ATLAS>
 ```
- 
+
+## Other files 
 To calculate the similarity score, we need a pre-made dictionary which can be downloaded [here](https://drive.google.com/file/d/16Uej6m8D3ZM0oasGvPX6-Xf0czpNqqq9/view?usp=sharing). Set the path of this dictionary in **config.py** under the name of **DICTIONARY**.
 
 Once you can run the server successfully, hit [http://127.0.0.1:5000/ ](http://127.0.0.1:5000/). You can see the index page something like this. You can add new information into DB using these page. ![index page](https://github.com/coronabd/corona-fact-checker/blob/master/server-for-extension/files/index.jpg) 
