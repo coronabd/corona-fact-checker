@@ -33,6 +33,8 @@ DB_HOST = <PROVIDED CONNECTION URL OF MONGO ATLAS>
 
 That should work!
 
+NOTE: Uploading data in a new account is easier with https://docs.mongodb.com/compass/master/install/ , https://docs.mongodb.com/compass/master/import-export/ . Also if you only want an already available database, contact with any collaborator in the project to get the deployed database's connection string. 
+
 
 ## Other files  
 To calculate the similarity score, we need a pre-made dictionary which can be downloaded [here](https://drive.google.com/file/d/16Uej6m8D3ZM0oasGvPX6-Xf0czpNqqq9/view?usp=sharing). Set the path of this dictionary in **config.py** under the name of **DICTIONARY**.
