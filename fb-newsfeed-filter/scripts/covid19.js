@@ -358,13 +358,13 @@ $(document).ready(function () {
                 
                 if (jQuery.isEmptyObject(request.msg) == false) { // cache found 
                     console.log("Old Cache Found")
-                    // modalShow(1, request.msg); // 
-                    alert('Hey')
+                    modalShow(1, request.msg); // 
+                    
                 }
                 else if (jQuery.isEmptyObject(request.msg)) { // no cache found
                     console.log("Old Cache Not Found");
-                    // modalShow(0);
-                    alert('Hey')
+                    modalShow(0);
+                    
                 }
             });
 
