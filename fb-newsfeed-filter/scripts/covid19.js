@@ -1,5 +1,6 @@
-const user_study_api = 'http://coronafactcheck.herokuapp.com/covid19/api/user_study_news'
+// constants and flags
 
+const user_study_api = 'http://coronafactcheck.herokuapp.com/covid19/api/user_study_news'
 
 $(document).ready(function () {
     var IS_FACEBOOK = false;
@@ -357,11 +358,13 @@ $(document).ready(function () {
                 
                 if (jQuery.isEmptyObject(request.msg) == false) { // cache found 
                     console.log("Old Cache Found")
-                    modalShow(1, request.msg); // 
+                    // modalShow(1, request.msg); // 
+                    alert('Hey')
                 }
                 else if (jQuery.isEmptyObject(request.msg)) { // no cache found
                     console.log("Old Cache Not Found");
-                    modalShow(0);
+                    // modalShow(0);
+                    alert('Hey')
                 }
             });
 

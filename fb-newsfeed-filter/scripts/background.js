@@ -1,6 +1,6 @@
 // ----------------- constants ---------------------
 const user_study_api = 'http://coronafactcheck.herokuapp.com/covid19/api/user_study_news'
-const time_gap = 3
+const time_gap = 5
 
 var pattern = ["https://www.facebook.com/lalsalu.page/posts/2769601203135709",
     "https://www.facebook.com/groups/brahmanbarian2017/permalink/3068719746521623/",
@@ -87,9 +87,9 @@ var biscuit;
 function setcookie() {
     expmin = parseFloat(Date.now() / 1000.0 + (time_gap * 60)); // 3 min
     // console.log("expiration date", expmin)
-    chrome.cookies.set({ url: "https://facebook.com", name: "modal", value: "shown", expirationDate: expmin }, function (cookie) {
-        console.log("Cookie Setup Successful " + cookie.value);
-    });
+    // chrome.cookies.set({ url: "https://facebook.com", name: "modal", value: "shown", expirationDate: expmin }, function (cookie) {
+    //     console.log("Cookie Setup Successful " + cookie.value);
+    // });
 
     chrome.storage.local.set({ 'MODAL_LAST_SHOWN':  expmin}, function () {
         console.log('Value is set to ' + expmin);
