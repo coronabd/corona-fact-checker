@@ -1,3 +1,6 @@
+const user_study_api = 'http://coronafactcheck.herokuapp.com/covid19/api/user_study_news'
+
+
 $(document).ready(function () {
     var IS_FACEBOOK = false;
 
@@ -110,8 +113,7 @@ $(document).ready(function () {
 
         return element;
     }
-    //
-    //
+    
     var _handlemisinfoApiSuccess = function (result, node, postData) {
         misinfoCount = misinfoCount + 1;
 
@@ -259,20 +261,18 @@ $(document).ready(function () {
         });
     };
 
-    // INSERT MISINFORMATION MODAL IN FACEBOOK DOM
-    // TODO- 1. from where to fetch clean data, 
-    // 2. show only in newsfeed,
-    //  3. decide when not to show, showing multiple times in a session will disturb people, 
-    // 4. to solve point 3, create extension option_page, 
-    // 5. read more on session storage
+/**
+ * Builds and show the model.
+ * @param {bool} cache - cache exist or not.
+ * @param {object} result - json object for cache.
+ */
     function modalShow(cache = 0, result = null) {  // cache true of false
         var modalTitle = "Most Recent Fake-news about Covid19"
         if (cache == 0) {
 
-
-            $.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo", { claim: "Corona tea" })
+		// getting data from 
+            $.post(user_study_api)
                 .done(function onSuccess(result) {
-
                     var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
                     var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">More on CORONAFACTCHECK.NET</a></div></div></div></div>'
                     var bodyTop = '<div class="modal-body"><ul class="list-group">'
@@ -281,11 +281,12 @@ $(document).ready(function () {
                     var tempDiv;
                     var fake;
                     var truth;
+			result = JSON.parse(result)
                     for (i = 0; i < result.length; i++) {
 
-                        fake = result[i].data.misinfo;
-                        truth = result[i].data.truth;
-                        source = result[i].data.truth_link;
+                        fake = result[i].misinfo;
+                        truth = result[i].truth;
+                        source = result[i].truth_link;
                         tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> ' + fake + '</div><div id="truth"><strong class="text-success">Truth:</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
                         bodyTop += tempDiv;
                     }
@@ -295,7 +296,6 @@ $(document).ready(function () {
                     $('#misinfomodal').modal({
                         keyboard: true
                     })
-
                 })
                 .fail(function onError(xhr, status, error) {
                     console.log(error)
@@ -311,11 +311,11 @@ $(document).ready(function () {
             var tempDiv;
             var fake;
             var truth;
+		result = JSON.parse(result)
             for (i = 0; i < result.length; i++) {
-
-                fake = result[i].data.misinfo;
-                truth = result[i].data.truth;
-                source = result[i].data.truth_link;
+                fake = result[i].misinfo;
+                truth = result[i].truth;
+                source = result[i].truth_link;
                 tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> ' + fake + '</div><div id="truth"><strong class="text-success">Truth:</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
                 bodyTop += tempDiv;
             }
@@ -330,21 +330,22 @@ $(document).ready(function () {
         $('#misinfomodal').modal("toggle");
     }
 
-    function modalAutoSetup() {
-        var flag;
-        console.log("Modal Auto Setup running");
-        chrome.runtime.sendMessage({ msg: "sendcookie" }, function (response) {
-            flag = response.msg; // cookie
-            if (flag == "shown") {
-                console.log("[content] shown");
-            }
-            else {
-                chrome.runtime.sendMessage({ msg: "checkcache" });
-                console.log("[content] modal ran");
-                chrome.runtime.sendMessage({ msg: "setcookie" });
-            }
-        });
-    }
+    // function modalAutoSetup() {
+    //     var flag;
+    //     chrome.runtime.sendMessage({ msg: "sendcookie" }, function (response) {
+    //         flag = response.msg; // cookie
+    //         console.log("GOT COOKIE: "+flag)
+    //         if (flag == "shown") {
+    //             console.log("COOKIE: shown\n Modal ran in past");
+    //         }
+    //         else {
+    //             chrome.runtime.sendMessage({ msg: "checkcache" });
+    //             console.log("Modal run now");
+    //             chrome.runtime.sendMessage({ msg: "setcookie" });
+    //         }
+    //     });
+    // }
+
     (function init() {
 
         // message listener for whole content script
@@ -353,24 +354,42 @@ $(document).ready(function () {
                 console.log(sender.tab ?
                     "from a content script:" + sender.tab.url :
                     "from the extension");
-                // comes from popup.js
+                
                 if (jQuery.isEmptyObject(request.msg) == false) { // cache found 
-                    console.log("cache found")
+                    console.log("Old Cache Found")
                     modalShow(1, request.msg); // 
                 }
                 else if (jQuery.isEmptyObject(request.msg)) { // no cache found
-                    console.log("cache not found");
+                    console.log("Old Cache Not Found");
                     modalShow(0);
                 }
             });
 
 
-        if (document.URL.match("http(s|):\/\/(www.|)facebook")) {
+        if (document.URL.match("(www.|http:\/\/|https:\/\/|m.)(facebook|fb).com")) {
             IS_FACEBOOK = true;
-            chrome.runtime.sendMessage({ msg: "checkcookie" }); // queries a cookie beforehand
-            modalAutoSetup(); // this needs to be called only if the tab is selected
+            console.log('---------- NEW LOOP -----------')
+            // chrome.runtime.sendMessage({ msg: "checkcookie" }); // queries a cookie beforehand
             
+
+            // modalAutoSetup(); // this needs to be called only if the tab is selected
             console.log("FACEBOOK")
+
+            var port = chrome.runtime.connect({name: "foradamncookie"});
+            port.postMessage({msg: "checkcookie"});
+            port.onMessage.addListener(function(response) {
+                right_now = parseFloat(Date.now() / 1000.0);
+                expires = response.msg;
+                if (right_now > expires) {
+                    chrome.runtime.sendMessage({ msg: "checkcache" });
+                    console.log("Modal run now");
+                    port.postMessage({msg: 'setcookie'})
+                }
+                else {
+                    console.log('Dekhano hoye gese. Pore ashen.')
+                }
+            });
+
         }
 
         if (IS_FACEBOOK) {
@@ -380,5 +399,3 @@ $(document).ready(function () {
         }
     })();
 });
-
-

@@ -1,5 +1,7 @@
-// match pattern for the URLs to redirect
-//add the links to be blocked here dynamically/manually
+// ----------------- constants ---------------------
+const user_study_api = 'http://coronafactcheck.herokuapp.com/covid19/api/user_study_news'
+const time_gap = 3
+
 var pattern = ["https://www.facebook.com/lalsalu.page/posts/2769601203135709",
     "https://www.facebook.com/groups/brahmanbarian2017/permalink/3068719746521623/",
     "https://www.facebook.com/mh.mon.94/videos/638619193593343/",
@@ -66,26 +68,33 @@ chrome.tabs.onActivated.addListener(temp)
 //------------ cookies -----------------
 var biscuit;
 
-function checkforcookie(tab) {
-    chrome.cookies.get({ url: "https://facebook.com", name: "modal" }, function (cookie) {
-        if (cookie == null) {
-            console.log("No cookie");
-            biscuit = null;
-        }
-        else {
-            biscuit = cookie.value;
-            console.log("Yes,", cookie.value);
-        }
-        //                    chrome.tabs.sendMessage(tabs, {msg: biscuit});
-    });
-}
+// function checkforcookie(tab) {
+//     console.log('---------- NEW LOOP -----------')
+//     chrome.cookies.get({ url: "https://facebook.com", name: "modal"}, function (cookie) {
+//         if (cookie == null) {
+//             biscuit = 'undefined';
+//             console.log("THE COOKIE,"+ biscuit);
+//         }
+//         else {
+//             biscuit = cookie.value;
+//             console.log("THE COOKIE,"+ biscuit);
+//         }
+//         //                    chrome.tabs.sendMessage(tabs, {msg: biscuit});
+//     });
+    
+// }
 
 function setcookie() {
-    expmin = parseFloat(Date.now() / 1000.0 + (3 * 60)); // 3 min
-    console.log("expiration date", expmin)
+    expmin = parseFloat(Date.now() / 1000.0 + (time_gap * 60)); // 3 min
+    // console.log("expiration date", expmin)
     chrome.cookies.set({ url: "https://facebook.com", name: "modal", value: "shown", expirationDate: expmin }, function (cookie) {
-        console.log("Cookie Setup Successful " + cookie);
+        console.log("Cookie Setup Successful " + cookie.value);
     });
+
+    chrome.storage.local.set({ 'MODAL_LAST_SHOWN':  expmin}, function () {
+        console.log('Value is set to ' + expmin);
+    });
+
 }
 
 chrome.runtime.onMessage.addListener(
@@ -95,7 +104,6 @@ chrome.runtime.onMessage.addListener(
             "from a content script:" + sender.tab.url :
             "to the extension");
 	    if(sender.tab){
-
         	tab = sender.tab.id // from where message is sent 	
 	    }
 	    else{
@@ -103,38 +111,62 @@ chrome.runtime.onMessage.addListener(
 			tab = tabs[0].id;
 		    })
 	    }
-	    console.log('this tab is calling the shots'+tab)
         if (request.msg == "checkcookie") {
             checkforcookie(tab);
         }
-        else if (request.msg == "setcookie") {
-
-            console.log("seting cookie");
-            setcookie();
-        }
-        else if (request.msg == "sendcookie") { // ok
-
-            sendResponse({ msg: biscuit });
-        }
         else if (request.msg == "checkcache") { // okay
-            console.log("a message came for CHECKCACHE")
             chrome.storage.local.get('CORONAMISINFO', function (data) {
-                //chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                //	console.log(tabs);
-                //	console.log('checked cache, got object of length',data.CORONAMISINFO);
-                //  chrome.tabs.sendMessage(tabs[0].id, {msg: data.CORONAMISINFO});
-                // });          
                 chrome.tabs.sendMessage(tab, { msg: data.CORONAMISINFO });
             })
+            console.log('Cache Result sent to content')
         }
-	    // else if(request.msg == 'checkcacheforuser'){
-		//     chrome.storage.local.get('CORONAMISINFO',function(data){
-		// 	    chrome.tabs.query({active:true, currentWindow: true}, function(tabs){
-		// 		    chrome.tabs.sendMessage(tabs[0].id, {msg: data.CORONAMISINFO});
-		// 	    })
-		//     })
-	    // }
     });
+
+// for long messages
+chrome.runtime.onConnect.addListener(function(port) {
+        console.log("----------------- NEW LOOP ------------------")
+        console.assert(port.name == "foradamncookie");
+        port.onMessage.addListener(function(response) {
+
+    if (response.msg == "checkcookie"){
+        chrome.storage.local.get('MODAL_LAST_SHOWN', function (data) {
+                port.postMessage({msg: data.MODAL_LAST_SHOWN})
+            
+        })
+
+
+        // chrome.cookies.get({
+        //     url: 'https://facebook.com',
+        //     name: 'modal'
+        // }, function(cookie){
+        //     console.log(cookie)
+        //     if (cookie==null) {
+        //         port.postMessage({msg: cookie})
+        //     }
+        //     else{
+        //         port.postMessage({msg: cookie.value})
+        //     }
+        // });
+
+
+        // chrome.cookies.get({ url: "https://facebook.com", name: "modal"}, function (cookie) {
+        //     console.log('Cookie is actually: ',cookie)
+        //     if (cookie == null) {
+        //         port.postMessage({msg: biscuit});
+        //     }
+        //     else {
+        //         biscuit = cookie.value;
+        //         console.log('Cookie', cookie.url, cookie.name, cookie.value)
+        //         port.postMessage({msg: biscuit});
+        //     }
+        // });
+    }
+    else if(response.msg == 'setcookie'){
+        setcookie()
+    }
+  });
+});
+
 
 function memorySizeOf(obj) {
     var bytes = 0;
@@ -175,8 +207,9 @@ function memorySizeOf(obj) {
     return formatByteSize(sizeOf(obj));
 };
 function fetchdata() {
-    $.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo", { claim: "Corona tea" })
+    $.post(user_study_api)
         .done(function onSuccess(result) {
+		console.log(result)
             chrome.storage.local.set({ 'CORONAMISINFO': result }, function () {
                 console.log('Value is set to ' + memorySizeOf(result));
             });
@@ -184,12 +217,7 @@ function fetchdata() {
         .fail(function onError(xhr, status, error) {
             console.log(error)
         })
-
 }
-//chrome.windows.onCreated.addListener(function() {
-//	console.log('browser started, fetching data')
-//        fetchdata();
-//    })
 
 console.log("browser started, fetching data");
 fetchdata();
