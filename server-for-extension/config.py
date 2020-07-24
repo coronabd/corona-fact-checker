@@ -8,6 +8,7 @@ DB_PORT = 27017
 MISINFO_COLLECTION = 'misinfo_collection'
 CACHE_COLLECTION = 'cache_collection'
 BLACKLIST_COLLECTION = 'blacklist_collection'
+USER_STUDY_COLLECTION = 'user_study'
 DB_NAME = 'covid'
 
 SIMILARITY_THRESHOLD = 0.1

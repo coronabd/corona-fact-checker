@@ -23,7 +23,7 @@ edit the following in `scripts/covid19.js`
 # Contributor Guide
 ## Current Structure
 
-Function structure in `covid10.js`:
+Function structure in `covid19.js`:
 ```
 # IN init()
   if facebook domain: 

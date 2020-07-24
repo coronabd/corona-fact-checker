@@ -167,3 +167,18 @@ Server is hosted on heroku. If you plan on pushing new builds to server, do the 
 9. push your version. `git push heroku master`
 
 If you have already work on local files, do step 1,3(cd into local directory),6,8,9. Step 6 is where merge conflict may arise. 
+
+## All Active API
+### Blacklist API
+Call: `https://coronafactcheck.herokuapp.com/covid19/api/get_blacklist`
+
+Returns: 
+
+JSON: a list of urls that should be blocked by extension.
+
+### User Study News
+call: `https://coronafactcheck.herokuapp.com/covid19/api/user_study_news`
+
+Returns:
+
+JSON

@@ -21,12 +21,12 @@ $(document).ready(function() {
     var misinfo_feedback_button_class = 'misinfo-checker-feedback-button';
     var facbook_shared_post_container_class = '.mtm._5pco';
 
-
     //for mobile
     var facebook_link_post_container = '._55wo._5rgr._5gh8';
     var facebook_link_post_container_link = '._4qxt';
     var facebook_link_post_container_text = '._2rbw._5tg_';
     var misinfo_marker_container_fb = '._5rgt._5nk5._5msi';
+
 
 
     var _handleClickbairReport = function(postData) {
@@ -364,8 +364,6 @@ $(document).ready(function() {
         console.log('Modal Building'+ cache)
         var modalTitle = "Most Recent Fake-news about Covid19"
         if (cache == 0) {
-
-            // getting data from
             $.post(user_study_api)
                 .done(function onSuccess(result) {
                     var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
@@ -448,7 +446,7 @@ $(document).ready(function() {
                 console.log(sender.tab ?
                     "from a content script:" + sender.tab.url :
                     "from the extension");
-
+              
                 if (jQuery.isEmptyObject(request.msg) == false) { // cache found
                     console.log("Old Cache Found")
                     modalShow(1, request.msg); //
@@ -488,13 +486,16 @@ $(document).ready(function() {
                     });
                 }
                 else {
-                    console.log('cache found');
+                    console.log('cache found'); 
+
                     modalShow(1, response.msg); //
+
                 }
 
                 // if (response.cache){
                 //     console.log("Old Cache Found")
                 //     modalShow(1, response.cache); //
+
                 // }
             });
 
