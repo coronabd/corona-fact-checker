@@ -39,16 +39,16 @@ NOTE: Uploading data in a new account is easier with https://docs.mongodb.com/co
 ## Other files  
 To calculate the similarity score, we need a pre-made dictionary which can be downloaded [here](https://drive.google.com/file/d/16Uej6m8D3ZM0oasGvPX6-Xf0czpNqqq9/view?usp=sharing). Set the path of this dictionary in **config.py** under the name of **DICTIONARY**.
 
-Once you can run the server successfully, hit [http://127.0.0.1:5000/ ](http://127.0.0.1:5000/). You can see the index page something like this. You can add new information into DB using these page. ![index page](https://github.com/coronabd/corona-fact-checker/blob/master/server-for-extension/files/index.jpg) 
+Once you can run the server successfully, hit [http://127.0.0.1:5005/ ](http://127.0.0.1:5005/). You can see the index page something like this. You can add new information into DB using these page. ![index page](https://github.com/coronabd/corona-fact-checker/blob/master/server-for-extension/files/index.jpg) 
 
-To verify a claim, you can visit this url [http://127.0.0.1:5000/fact_checker](http://127.0.0.1:5000/fact_checker). ![index page](https://github.com/coronabd/corona-fact-checker/blob/master/server-for-extension/files/checker.jpg)
+To verify a claim, you can visit this url [http://127.0.0.1:5005/fact_checker](http://127.0.0.1:5005/fact_checker). ![index page](https://github.com/coronabd/corona-fact-checker/blob/master/server-for-extension/files/checker.jpg)
 
 The verification result will be something like this if any matches found. ![index page](https://github.com/coronabd/corona-fact-checker/blob/master/server-for-extension/files/results.jpg)
 You can set the threshold for similarity check and number of returned results in **config.py**.
 ## Misinfo Checker API
 
 The route of the API is set to **/covid19/api/get_related_misinfo** and supports only **POST** method. You can check the API request by sending a request like this:
-> curl -X POST http://127.0.0.1:5000/covid19/api/get_related_misinfo -F 'claim=Tea can cure Corona'
+> curl -X POST http://127.0.0.1:5005/covid19/api/get_related_misinfo -F 'claim=Tea can cure Corona'
 The API response will be something like this:
 ```javascript
 [
@@ -87,7 +87,7 @@ The API response will be something like this:
 ]
 ```
 You can also check the API response for Bengali misinformation by sending a request like this:
-> curl -X POST http://127.0.0.1:5000/covid19/api/get_related_misinfo -F 'claim=চা পান করলে করোনা ভালো হয়ে যাব'
+> curl -X POST http://127.0.0.1:5005/covid19/api/get_related_misinfo -F 'claim=চা পান করলে করোনা ভালো হয়ে যাব'
 The API response will be something like this:
 ```javascript
 [
