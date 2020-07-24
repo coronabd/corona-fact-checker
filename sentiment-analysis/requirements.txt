@@ -1,0 +1,8 @@
+flask
+requests
+flask_restplus
+pandas
+nltk
+# On python shell:
+# nltk.download('vader_lexicon')
+
