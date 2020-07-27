@@ -79,17 +79,17 @@ $(document).ready(function() {
         //     str += '<b>misinfoy Language Pattern:</b>&nbsp;' + data.matched_ngram.join(", ") + "<br/>";
         // }
 
-        str += '<b>Decision Confidence:</b>&nbsp;' + data.confidence + "<br/>";
+        str += '<b>সম্ভাবনা:</b>&nbsp;' + data.confidence + "<br/>";
 
         // if (data.similarity && data.similarity.length > 0){
         //     str += '<b>Similarity:</b>&nbsp;' + data.similarity + "<br/>" + "<hr/>"
         // }
 
-        str += '<b>Explanation:</b><br/>' + data.explanation + "<br/>";
+        str += '<b>ব্যাখ্যা:</b><br/>' + data.explanation + "<br/>";
 
-        str += '<b>Verified By:</b><br/>' + data.verified_by + "<br/>";
+        str += '<b>যাচাই করেছে:</b><br/>' + data.verified_by + "<br/>";
 
-        str += '<b>Verification Link:</b><br/>' + data.verification_link;
+        str += '<b>যাচাইয়ের লিংক:</b><br/>' + data.verification_link;
 
         var info = $('<div></div>').html(str);
 
@@ -246,7 +246,7 @@ $(document).ready(function() {
 
 
         misinfoMarker.addClass('misinfo-marker-is-misinfo');
-        misinfoMarker.text('Potential Misinfo! - Click here to read more');
+        misinfoMarker.text('তথ্যটি ভুল হতে পারে। জানার জন্য এখানে ক্লিক করুন...');
         var misinfoMarkerWrapper = $("<div class='misinfo-marker-wrapper'></div>");
         misinfoMarkerWrapper.attr('id', _getmisinfoWrapperId(misinfoCount));
         misinfoMarkerWrapper.append(misinfoMarker);
@@ -349,7 +349,8 @@ $(document).ready(function() {
             // if (title) console.log('title', title);
             linkObj.mouseleave();
             //_callmisinfoApi(title, text, link, post, shared_post, nodeObj);
-            if(post.includes('Coronavirus') || post.includes('করোনা')|| post.includes('corona')){
+            if(post.includes('Coronavirus') || post.includes('করোনা')|| post.includes('corona') || 
+                post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")){
             _showMisinfoMarker(title, text, link, post, shared_post, nodeObj);
             }
         });
