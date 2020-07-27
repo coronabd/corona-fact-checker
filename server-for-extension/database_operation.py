@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from flask import Flask
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -76,3 +77,7 @@ def fetch_all(table_name):
         claim_lists.append(str_row)
     return claim_lists
 
+def write_feedback(item_id, user, verdict):
+    query = {'_id': ObjectId(item_id)}
+    result = misinfo_collection.update_one(query,{"$push": {verdict: user} })
+    print(result)

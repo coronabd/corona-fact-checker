@@ -2,6 +2,7 @@
 const user_study_api = 'http://coronafactcheck.herokuapp.com/covid19/api/user_study_news'
 const time_gap = 2
 const FB_URL = 'https://www.facebook.com/'
+const user_feedback_api = ''
 
 var pattern = ["https://www.facebook.com/lalsalu.page/posts/2769601203135709",
     "https://www.facebook.com/groups/brahmanbarian2017/permalink/3068719746521623/",
@@ -224,6 +225,7 @@ function fetchdata() {
             console.log(error)
         })
 }
+
 
 console.log("browser started, fetching data");
 fetchdata();

@@ -79,5 +79,19 @@ def fetching_user_news():
     news_list = db_operation.fetch_all('user_study')
     return json.dumps(news_list)
 
+@app.route('/user_feedback', methods=['POST'])
+def receive_user_feedback():
+    feedback = request.values.get('feedback')
+    print(feedback)
+    feedback = json.loads(feedback)
+    user = feedback['uuid']
+    verdict ="vote_down" if feedback['verdict']==0 else "vote_up"
+    item_id = feedback['item_id']
+    print(user, verdict, item_id)
+    db_operation.write_feedback(item_id, user, verdict)
+    return 'Success'
+
+
+
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0',port=5005)
+    app.run(host = '0.0.0.0',port=5005, debug=True)

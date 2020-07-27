@@ -57,6 +57,7 @@ $(document).ready(function() {
     //
     var _handlefeedbackButtonClick = function(postData) {
         alert("Feedback received. Thanks!!");
+
         // console.log(postData);
         // $.post(API_FEEDBACK, postData)
         //     .done(function onSuccess(result) {
@@ -492,9 +493,7 @@ $(document).ready(function() {
                 }
                 else {
                     console.log('cache found'); 
-
                     modalShow(1, response.msg); //
-
                 }
 
                 // if (response.cache){
@@ -510,6 +509,7 @@ $(document).ready(function() {
             console.log("Covid19 Misinfo Tracker Active on Facebook");
             document.onscroll = loop;
             loop();
+            var uuid = 'undefinedUser';
         }
     })();
 });
