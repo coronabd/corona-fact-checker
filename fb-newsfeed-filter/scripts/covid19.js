@@ -89,7 +89,7 @@ $(document).ready(function() {
 
         str += '<b>Verified By:</b><br/>' + data.verified_by + "<br/>";
 
-        str += '<b>Verification Link:</b><br/>' + data.verification_link;
+        str += '<b>Verification Link:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
 
         var info = $('<div></div>').html(str);
 
@@ -226,7 +226,7 @@ $(document).ready(function() {
     //     return link.substring(link.lastIndexOf(matchBegin) + matchBegin.length, link.lastIndexOf("&h="));
     // }
     //
-
+     var click_count=0;
      //After clicking the 'Possible misinfo" bar, show the information block
      var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node) {
 
@@ -253,7 +253,8 @@ $(document).ready(function() {
 
 
         //var nodeToFind = $("div[class='_1dwg _1w_m _q7o']"); // look for div with only class = mtm; other posts had two classes --> mtm _5pco or mtm xxxx which caused multiple addition of the wrapper
-        var nodeToFind = $("div[class='story_body_container']");
+        var nodeToFind = $("div[class='story_body_container']");//for mobile
+        //var nodeToFind = $("header[class='_7om2 _1o88 _77kd _5qc1']");
         node.find(nodeToFind).after(misinfoMarkerWrapper);   // change mtm to _1dwg _1w_m _q7o
 
         misinfoMarker.click(function(e) {
@@ -266,12 +267,21 @@ $(document).ready(function() {
             .fail(function onError(xhr, status, error) {
                    console.log(error)
             })*/
+
+        var misinfo_wrapper_id = this.id;
+        var matches = misinfo_wrapper_id.match(/(\d+)/);
+        var misinfo_popupid = matches[0];
+
+        //count number of the click
+        click_count=click_count+1;
+        console.log(click_count);
+
         var xmlhttp = new XMLHttpRequest();
         var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo?claim="+postData.post;
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 serverData = JSON.parse(this.responseText);
-                console.log(serverData[0]['data'])
+                //console.log(serverData[0]['data'])
                 };
             };
         xmlhttp.open("POST", url, false);
@@ -289,9 +299,9 @@ $(document).ready(function() {
                 "verification_link": serverData[0]['data']['truth_link']
               }
             };
-        console.log(misinfo_result)
-        var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfoCount, postData);
-        console.log("info", infoElement);
+        console.log("misinfocount = ", misinfo_popupid)
+        var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData);
+        //console.log("info", infoElement);
 
         var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
         infoElement.append(closeButton);
