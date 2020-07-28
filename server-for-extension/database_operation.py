@@ -79,5 +79,5 @@ def fetch_all(table_name):
 
 def write_feedback(item_id, user, verdict):
     query = {'_id': ObjectId(item_id)}
-    result = misinfo_collection.update_one(query,{"$push": {verdict: user} })
+    result = user_study.update_one(query,{"$push": {verdict: user} })
     print(result)

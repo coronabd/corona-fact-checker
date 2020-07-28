@@ -89,7 +89,7 @@ def receive_user_feedback():
     item_id = feedback['item_id']
     print(user, verdict, item_id)
     db_operation.write_feedback(item_id, user, verdict)
-    return 'Success'
+    return 'Sucesss'
 
 
 
