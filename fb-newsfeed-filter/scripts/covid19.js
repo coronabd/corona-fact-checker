@@ -299,7 +299,7 @@ $(document).ready(function() {
                 "verification_link": serverData[0]['data']['truth_link']
               }
             };
-        console.log("misinfocount = ", misinfo_popupid)
+        console.log("misinfo_popupid = ", misinfo_popupid)
         var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData);
         //console.log("info", infoElement);
 
