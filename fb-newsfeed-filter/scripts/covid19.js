@@ -227,10 +227,10 @@ $(document).ready(function() {
     // }
     //
 
-     //After clicking the 'Possible misinfo" bar, show the information block
-     var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node) {
+    //After clicking the 'Possible misinfo" bar, show the information block
+    var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node) {
 
-            var postData = {
+        var postData = {
             title: title,
             text: text,
             url: linkUrl,
@@ -254,7 +254,7 @@ $(document).ready(function() {
 
         //var nodeToFind = $("div[class='_1dwg _1w_m _q7o']"); // look for div with only class = mtm; other posts had two classes --> mtm _5pco or mtm xxxx which caused multiple addition of the wrapper
         var nodeToFind = $("div[class='story_body_container']");
-        node.find(nodeToFind).after(misinfoMarkerWrapper);   // change mtm to _1dwg _1w_m _q7o
+        node.find(nodeToFind).after(misinfoMarkerWrapper); // change mtm to _1dwg _1w_m _q7o
 
         misinfoMarker.click(function(e) {
             /*$.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo",{ claim: postData.post })
@@ -266,46 +266,46 @@ $(document).ready(function() {
             .fail(function onError(xhr, status, error) {
                    console.log(error)
             })*/
-        var xmlhttp = new XMLHttpRequest();
-        var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo?claim="+postData.post;
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                serverData = JSON.parse(this.responseText);
-                console.log(serverData[0]['data'])
+            var xmlhttp = new XMLHttpRequest();
+            var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo?claim=" + postData.post;
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    serverData = JSON.parse(this.responseText);
+                    console.log(serverData[0]['data'])
                 };
             };
-        xmlhttp.open("POST", url, false);
-        xmlhttp.send();
+            xmlhttp.open("POST", url, false);
+            xmlhttp.send();
 
-        var sim_score = serverData[0]['similarity']
-        if(sim_score > 0.1){
+            var sim_score = serverData[0]['similarity']
+            if (sim_score > 0.1) {
 
-        var misinfo_result = {
-              "data": {
-                "decision": serverData[0]['data']['misinfo'],
-                "confidence": serverData[0]['similarity'],
-                "explanation": serverData[0]['data']['truth'],
-                "verified_by": serverData[0]['data']['verified_by'],
-                "verification_link": serverData[0]['data']['truth_link']
-              }
-            };
-        console.log(misinfo_result)
-        var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfoCount, postData);
-        console.log("info", infoElement);
+                var misinfo_result = {
+                    "data": {
+                        "decision": serverData[0]['data']['misinfo'],
+                        "confidence": serverData[0]['similarity'],
+                        "explanation": serverData[0]['data']['truth'],
+                        "verified_by": serverData[0]['data']['verified_by'],
+                        "verification_link": serverData[0]['data']['truth_link']
+                    }
+                };
+                console.log(misinfo_result)
+                var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfoCount, postData);
+                console.log("info", infoElement);
 
-        var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
-        infoElement.append(closeButton);
+                var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
+                infoElement.append(closeButton);
 
-            closeButton.click(function(e) {
-                infoElement.fadeOut('medium');
-            });
+                closeButton.click(function(e) {
+                    infoElement.fadeOut('medium');
+                });
 
-            infoElement.hide();
-            misinfoMarkerWrapper.append(infoElement);
+                infoElement.hide();
+                misinfoMarkerWrapper.append(infoElement);
 
-            infoElement.fadeIn('medium');
+                infoElement.fadeIn('medium');
             }
-            });
+        });
 
     };
 
@@ -349,12 +349,13 @@ $(document).ready(function() {
             // if (title) console.log('title', title);
             linkObj.mouseleave();
             //_callmisinfoApi(title, text, link, post, shared_post, nodeObj);
-            if(post.includes('Coronavirus') || post.includes('করোনা')|| post.includes('corona') || 
-                post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")){
-            _showMisinfoMarker(title, text, link, post, shared_post, nodeObj);
+            if (post.includes('Coronavirus') || post.includes('করোনা') || post.includes('corona') ||
+                post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")) {
+                _showMisinfoMarker(title, text, link, post, shared_post, nodeObj);
             }
         });
     };
+
 
     /**
      * Builds and show the model.
@@ -362,7 +363,7 @@ $(document).ready(function() {
      * @param {object} result - json object for cache.
      */
     function modalShow(cache = 0, result = null) { // cache true of false
-        console.log('Modal Building'+ cache)
+        console.log('Modal Building' + cache)
         var modalTitle = "করোনা সংক্রান্ত ভুয়া খবর থেকে সতর্ক থাকুন"
         var labelMoreButton = "আরও জানুন"
         var labelCloseButton = "বন্ধ করুন"
@@ -371,77 +372,70 @@ $(document).ready(function() {
         if (cache == 0) {
             $.post(user_study_api)
                 .done(function onSuccess(result) {
-                    var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-                    var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal"></button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">'+ labelMoreButton +'</a></div></div></div></div>'
-                    var bodyTop = '<div class="modal-body"><ul class="list-group">'
-                    var bodyBottom = '</ul></div>'
-                    var i;
-                    var tempDiv;
-                    var fake;
-                    var truth;
+
+                    var top = '<div id="myModal" class="modal"><div class="modal-content"><div class="title-background"><div id="closeBtn" class="close">x</div><p class="title-text">নিচের ভুয়া তথ্যগুলো থেকে সতর্ক থাকুন</p></div>'
                     result = JSON.parse(result)
                     for (i = 0; i < result.length; i++) {
 
                         fake = result[i].misinfo;
                         truth = result[i].truth;
                         source = result[i].truth_link;
-                        tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">'+ labelFake +'</strong> ' + fake + '</div><div id="truth"><strong class="text-success">'+ labelTrue +'</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
-                        bodyTop += tempDiv;
+                        temp_li_grp_item = '<div class="list-group-item"><div class="rumor-title">গুজব</div><div id="fake" class="rumor">' + fake + '</div><div class="truth-title">সত্য</div><div id="truth" class="truth">' + truth + '</div></div>'
+                        top += temp_li_grp_item;
                     }
-                    var modal = top + bodyTop + bodyBottom + bottom;
+                    var bottom = '<div class="title-background green-bg"><a class="title-text">আরও জানতে এখানে ক্লিক করুন</a></div></div></div>'
+                    var modal = top + bottom;
+
+                    // -------------------------------------------------------------
+                    // var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+                    // var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal"></button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">'+ labelMoreButton +'</a></div></div></div></div>'
+                    // var bodyTop = '<div class="modal-body"><ul class="list-group">'
+                    // var bodyBottom = '</ul></div>'
+                    // var i;
+                    // var tempDiv;
+                    // var fake;
+                    // var truth;
+                    // result = JSON.parse(result)
+                    // for (i = 0; i < result.length; i++) {
+
+                    //     fake = result[i].misinfo;
+                    //     truth = result[i].truth;
+                    //     source = result[i].truth_link;
+                    //     tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">'+ labelFake +'</strong> ' + fake + '</div><div id="truth"><strong class="text-success">'+ labelTrue +'</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
+                    //     bodyTop += tempDiv;
+                    // }
+                    // var modal = top + bodyTop + bodyBottom + bottom;
 
                     $("body").append(modal)
-                    $('#misinfomodal').modal({
-                        keyboard: true
-                    })
+                    // $('#misinfomodal').modal({
+                    //     keyboard: true
+                    // })
                 })
                 .fail(function onError(xhr, status, error) {
                     console.log(error)
                 })
-        } else {
 
-            var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-            var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">'+ labelCloseButton +'</button><a class="btn btn-light" href="https://coronafactcheck.net/trueFalse" role="button">'+labelMoreButton+'</a></div></div></div></div>'
-            var bodyTop = '<div class="modal-body"><ul class="list-group">'
-            var bodyBottom = '</ul></div>'
-            var i;
-            var tempDiv;
-            var fake;
-            var truth;
+        } else {
+            var top = '<div id="myModal" class="modal"><div class="modal-content"><div class="title-background"><div id="closeBtn" class="close">&times</div><p class="title-text">নিচের ভুয়া তথ্যগুলো থেকে সতর্ক থাকুন</p></div>'
             result = JSON.parse(result)
             for (i = 0; i < result.length; i++) {
+
                 fake = result[i].misinfo;
                 truth = result[i].truth;
                 source = result[i].truth_link;
-                tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">'+labelFake+'</strong> ' + fake + '</div><div id="truth"><strong class="text-success">'+labelTrue+'</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
-                bodyTop += tempDiv;
+                temp_li_grp_item = '<div class="list-group-item"><div class="rumor-title">গুজব</div><div id="fake" class="rumor">' + fake + '</div><div class="truth-title">সত্য</div><div id="truth" class="truth">' + truth + '</div></div>'
+                top += temp_li_grp_item;
             }
-            var modal = top + bodyTop + bodyBottom + bottom;
-
+            var bottom = '<div class="footer"><a href="https://coronafactcheck.net" target="_blank">আরও জানতে এখানে ক্লিক করুন</a></div></div></div>'
+            var modal = top + bottom;
             $("body").append(modal)
-            $('#misinfomodal').modal({
-                keyboard: true
-            })
         }
 
-        $('#misinfomodal').modal("toggle");
+        $("#myModal").toggle();
+        $("#closeBtn").click(function() {
+            $("#myModal").toggle();
+        });
     }
-
-    // function modalAutoSetup() {
-    //     var flag;
-    //     chrome.runtime.sendMessage({ msg: "sendcookie" }, function (response) {
-    //         flag = response.msg; // cookie
-    //         console.log("GOT COOKIE: "+flag)
-    //         if (flag == "shown") {
-    //             console.log("COOKIE: shown\n Modal ran in past");
-    //         }
-    //         else {
-    //             chrome.runtime.sendMessage({ msg: "checkcache" });
-    //             console.log("Modal run now");
-    //             chrome.runtime.sendMessage({ msg: "setcookie" });
-    //         }
-    //     });
-    // }
 
     (function init() {
 
@@ -451,10 +445,17 @@ $(document).ready(function() {
                 console.log(sender.tab ?
                     "from a content script:" + sender.tab.url :
                     "from the extension");
-              
+
                 if (jQuery.isEmptyObject(request.msg) == false) { // cache found
                     console.log("Old Cache Found")
-                    modalShow(1, request.msg); //
+
+                    if ($('#myModal').length) {
+                        console.log($('#myModal').length)
+                        $("#myModal").toggle();
+                    } else {
+                        modalShow(1, request.msg);
+                    }
+
 
                 } else if (jQuery.isEmptyObject(request.msg)) { // no cache found
                     console.log("Old Cache Not Found");
@@ -462,9 +463,9 @@ $(document).ready(function() {
 
                 }
             });
-
-
         if (document.URL.match("(www.|http:\/\/|https:\/\/|m.)(facebook|fb).com")) {
+
+
             IS_FACEBOOK = true;
             console.log('---------- NEW LOOP -----------')
 
@@ -480,8 +481,7 @@ $(document).ready(function() {
             port.onMessage.addListener(function(response) {
                 if (response.msg == 'shown') {
                     console.log('Already Shown')
-                }
-                 else if (response.msg == 'notshown'){
+                } else if (response.msg == 'notshown') {
                     console.log('will show now')
                     port.postMessage({
                         msg: 'checkcache'
@@ -489,19 +489,19 @@ $(document).ready(function() {
                     port.postMessage({
                         msg: 'setcookie'
                     });
+                } else {
+                    console.log('cache found');
+
+                    if ($('#myModal').length) {
+                        console.log($('#myModal').length)
+                        $("#myModal").toggle();
+                    } else {
+                        modalShow(1, response.msg);
+                    }
+
+
+
                 }
-                else {
-                    console.log('cache found'); 
-
-                    modalShow(1, response.msg); //
-
-                }
-
-                // if (response.cache){
-                //     console.log("Old Cache Found")
-                //     modalShow(1, response.cache); //
-
-                // }
             });
 
         }
