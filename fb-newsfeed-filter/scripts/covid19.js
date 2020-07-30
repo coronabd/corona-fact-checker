@@ -1,6 +1,20 @@
 // constants and flags
 
 const user_study_api = 'http://coronafactcheck.herokuapp.com/covid19/api/user_study_news'
+var uid = 'unnamed'
+
+
+function get_uid() {
+    var re = new RegExp('/\/[a-zA-Z0-9]{3,}')
+    var user_info = document.querySelector('._5xu4 a').href;
+    if (user_info) {
+        it = user_info.matchAll('\/[a-zA-Z0-9]{3,}')
+        return it.next().value[0];
+
+    } else {
+        return 'unnamed'
+    }
+}
 
 $(document).ready(function() {
     var IS_FACEBOOK = false;
@@ -470,6 +484,8 @@ $(document).ready(function() {
             console.log('---------- NEW LOOP -----------')
 
             console.log("FACEBOOK")
+            uid = get_uid()
+            console.log("UserID ", uid)
 
             var port = chrome.runtime.connect({
                 name: "cookie_comm"
