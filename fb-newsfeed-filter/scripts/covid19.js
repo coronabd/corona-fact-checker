@@ -30,10 +30,11 @@ $(document).ready(function() {
 
 
     var _handleClickbairReport = function(postData) {
-        alert("Feedback received. Thanks!!");
+        //alert("Feedback received. Thanks!!");
         //will handle this API call later. Currently only alert.
         // postData.feedback = 'dislike';
-        // console.log(postData);
+        //console.log(postData);
+        console.log(fbpostId)
         // $.post(API_FEEDBACK, postData)
         //     .done(function onSuccess(result) {
         //         // result = dummyData;
@@ -55,8 +56,10 @@ $(document).ready(function() {
         return 'misinfoMarkerWrapper_' + count;
     };
     //
-    var _handlefeedbackButtonClick = function(postData) {
-        alert("Feedback received. Thanks!!");
+    var _handlefeedbackButtonClick = function(postData, fbpostId) {
+        console.log(fbpostId)
+        //alert("Feedback received. Thanks!!");
+        alert(" আপনার  ফিডব্যাকের জন্যে ধন্যবাদ!!");
         // console.log(postData);
         // $.post(API_FEEDBACK, postData)
         //     .done(function onSuccess(result) {
@@ -70,9 +73,10 @@ $(document).ready(function() {
     };
     //
     //
-    var _getmisinfoInfoElement = function(data, id, postData) {
+    var _getmisinfoInfoElement = function(data, id, postData, fbpostId) {
         var element = $("<div class='misinfo-marker-info-wrapper' style='font-size: 15px;'></div>");
         element.attr('id', _getmisinfoPopupId(id));
+        console.log(fbpostId)
 
         var str = '';
         // if (data.matched_ngram && data.matched_ngram.length > 0) {
@@ -81,7 +85,7 @@ $(document).ready(function() {
 
         //str += '<b>Decision Confidence:</b>&nbsp;' + data.confidence + "<br/>";
 
-        str += '<b> এই তথ্যটি ভুল হবার সম্ভাবনা:</b>&nbsp;' + Math.round(data.confidence *100) + "%<br/>";
+        str += '<div class="mis-info-text-font"><b> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence *100) + "%</b><br/></div>";
 
 
         // if (data.similarity && data.similarity.length > 0){
@@ -89,28 +93,26 @@ $(document).ready(function() {
         // }
 
         //str += '<b>Explanation:</b><br/>' + data.explanation + "<br/>";
-        str += '<b> সঠিক তথ্য:</b><br/>' + data.explanation + "<br/>";
-        str += '<b>Verified By:</b><br/>' + data.verified_by + "<br/>";
+        str += '<div><b> সঠিক তথ্য:</b><br/>' + data.explanation + "<br/></div>";
+        //str += '<b>Verified By:</b><br/>' + data.verified_by + "<br/>";
 
        //str += '<b>Verification Link:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
 
-        str += '<b>তথ্যসূত্র:</b><br/>' + data.verified_by + "<br/>";
-
-        str += '<b>তথ্যসূত্র:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
+        str += '<div><b>তথ্যসূত্র:</b><br/><a href="' + data.verification_link + '">'+  'বিশ্ব স্বাস্থ্য সংস্থা'+'</a></div>';
 
         var info = $('<div></div>').html(str);
 
         // reportButtonWrapper.find('a').html('Report misinfo');
         // reportButtonWrapper.find('a').css('color', '#ff9022');
 
-        var feedbackButton = $('<a></a>');
+        var feedbackButton = $('<div><a></a></div>');
         feedbackButton.attr('misinfoId', id)
         // feedbackButton.html('This should not be a Misinfo')
         feedbackButton.html('আমি মনে করি না এই তথ্যটি ভুয়া')
-        feedbackButton.css('color', '#ff9022')
+        feedbackButton.css('color', 'rgb(235, 28, 28)')
 
         feedbackButton.click(function(e) {
-            _handlefeedbackButtonClick(postData);
+            _handlefeedbackButtonClick(postData, fbpostId);
         });
 
 
@@ -234,16 +236,21 @@ $(document).ready(function() {
     //     return link.substring(link.lastIndexOf(matchBegin) + matchBegin.length, link.lastIndexOf("&h="));
     // }
     //
+
+     // click counter
      var click_count=0;
+
+
      //After clicking the 'Possible misinfo" bar, show the information block
-     var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node) {
+     var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node, fbpost_id) {
 
             var postData = {
             title: title,
             text: text,
             url: linkUrl,
             post: post,
-            sharedPost: shared_post
+            sharedPost: shared_post,
+            fbpostID: fbpost_id
         };
 
         misinfoCount = misinfoCount + 1;
@@ -282,7 +289,9 @@ $(document).ready(function() {
 
         //count number of the click
         click_count=click_count+1;
-        console.log(click_count);
+
+        //Print facebook post id
+        //console.log(fbpost_id)
 
         var xmlhttp = new XMLHttpRequest();
         var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo?claim="+postData.post;
@@ -307,9 +316,9 @@ $(document).ready(function() {
                 "verification_link": serverData[0]['data']['truth_link']
               }
             };
-        console.log("misinfo_popupid = ", misinfo_popupid)
-        var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData);
-        //console.log("info", infoElement);
+
+
+        var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData, fbpost_id);
 
         var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
         infoElement.append(closeButton);
@@ -350,11 +359,11 @@ $(document).ready(function() {
 
             var linkObj = nodeObj.find(facebook_link_post_container_link);
             linkObj.mouseenter();
-
             // link is the url of the shared content (news article, video etc.)
             var link = linkObj.attr('href');
 
-
+            //facebook post Id
+            fbpostId = nodeObj.attr('id');
 
             // title is the headline of a news article or video
             // text is the subtitle or thumbnail text
@@ -368,7 +377,7 @@ $(document).ready(function() {
             linkObj.mouseleave();
             //_callmisinfoApi(title, text, link, post, shared_post, nodeObj);
             if(post.includes('Coronavirus') || post.includes('করোনা')|| post.includes('corona')){
-            _showMisinfoMarker(title, text, link, post, shared_post, nodeObj);
+            _showMisinfoMarker(title, text, link, post, shared_post, nodeObj,fbpostId);
             }
         });
     };
