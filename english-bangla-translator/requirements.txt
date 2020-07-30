@@ -1,0 +1,4 @@
+googletrans=2.4.0
+flask
+requests
+flask_restplus

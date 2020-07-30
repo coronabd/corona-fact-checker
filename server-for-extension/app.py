@@ -60,7 +60,7 @@ def insert():
     print("Susccess " + str(post_id))
     return render_template("submission_success.html")
 
-
+# this is the search query
 @app.route('/covid19/api/get_related_misinfo', methods=['POST'])
 def cb_detection():
     claim = request.values.get('claim')
@@ -69,5 +69,29 @@ def cb_detection():
     return jsonify(misinfo_list)
 
 
+@app.route('/covid19/api/get_blacklist', methods=['POST'])    
+def blacklist():
+    urls = db_operation.get_blacklist()
+    return json.dumps(urls)
+
+@app.route('/covid19/api/user_study_news',methods=['POST'])
+def fetching_user_news():
+    news_list = db_operation.fetch_all('user_study')
+    return json.dumps(news_list)
+
+@app.route('/user_feedback', methods=['POST'])
+def receive_user_feedback():
+    feedback = request.values.get('feedback')
+    print(feedback)
+    feedback = json.loads(feedback)
+    user = feedback['uuid']
+    verdict ="vote_down" if feedback['verdict']==0 else "vote_up"
+    item_id = feedback['item_id']
+    print(user, verdict, item_id)
+    db_operation.write_feedback(item_id, user, verdict)
+    return 'Sucesss'
+
+
+
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0',port=5005)
+    app.run(host = '0.0.0.0',port=5005, debug=True)

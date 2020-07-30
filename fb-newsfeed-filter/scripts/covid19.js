@@ -21,6 +21,13 @@ $(document).ready(function() {
     var misinfo_feedback_button_class = 'misinfo-checker-feedback-button';
     var facbook_shared_post_container_class = '.mtm._5pco';
 
+    //for mobile
+    var facebook_link_post_container = '._55wo._5rgr._5gh8';
+    var facebook_link_post_container_link = '._4qxt';
+    var facebook_link_post_container_text = '._2rbw._5tg_';
+    var misinfo_marker_container_fb = '._5rgt._5nk5._5msi';
+
+
 
     //for mobile
     var facebook_link_post_container = '._55wo._5rgr._5gh8';
@@ -30,6 +37,7 @@ $(document).ready(function() {
 
 
     var _handleClickbairReport = function(postData) {
+
         //alert("Feedback received. Thanks!!");
         //will handle this API call later. Currently only alert.
         // postData.feedback = 'dislike';
@@ -56,6 +64,7 @@ $(document).ready(function() {
         return 'misinfoMarkerWrapper_' + count;
     };
     //
+
     var _handlefeedbackButtonClick = function(postData, fbpostId) {
         console.log(fbpostId)
         //alert("Feedback received. Thanks!!");
@@ -83,10 +92,10 @@ $(document).ready(function() {
         //     str += '<b>misinfoy Language Pattern:</b>&nbsp;' + data.matched_ngram.join(", ") + "<br/>";
         // }
 
+
         //str += '<b>Decision Confidence:</b>&nbsp;' + data.confidence + "<br/>";
 
         str += '<div class="mis-info-text-font"><b> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence *100) + "%</b><br/></div>";
-
 
         // if (data.similarity && data.similarity.length > 0){
         //     str += '<b>Similarity:</b>&nbsp;' + data.similarity + "<br/>" + "<hr/>"
@@ -237,12 +246,14 @@ $(document).ready(function() {
     // }
     //
 
+
      // click counter
      var click_count=0;
 
 
      //After clicking the 'Possible misinfo" bar, show the information block
      var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node, fbpost_id) {
+
 
             var postData = {
             title: title,
@@ -256,7 +267,9 @@ $(document).ready(function() {
         misinfoCount = misinfoCount + 1;
 
         //var ismisinfo = misinfo_result.decision === 'misinfo';
+
         var misinfoMarker = $("<div class='misinfo-marker1'><div class='misinfo-marker1-heading1'>এটি একটি ভুয়া তত্থ্য </div><div class='misinfo-marker1-heading2'> বিশেষজ্ঞরা এটাকে ফেক নিউজ হিসেবে নিশ্চিত করেছেন </div></div><div class='misinfo-marker-span'><div class='misinfo-marker1-heading1'>বিস্তারিত জানুন</div><div class='misinfo-marker1-heading2'>তথ্যটি কেন ভুয়া, সে সম্পর্কিত তথ্য প্রমাণ জানতে ক্লিক করুন</div></div>");
+
         misinfoMarker.attr('id', _getmisinfoLabelId(misinfoCount));
 
 
@@ -292,7 +305,6 @@ $(document).ready(function() {
 
         //Print facebook post id
         //console.log(fbpost_id)
-
         var xmlhttp = new XMLHttpRequest();
         var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo?claim="+postData.post;
         xmlhttp.onreadystatechange = function() {
@@ -318,7 +330,9 @@ $(document).ready(function() {
             };
 
 
+
         var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData, fbpost_id);
+
 
         var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
         infoElement.append(closeButton);
@@ -376,8 +390,10 @@ $(document).ready(function() {
             // if (title) console.log('title', title);
             linkObj.mouseleave();
             //_callmisinfoApi(title, text, link, post, shared_post, nodeObj);
-            if(post.includes('Coronavirus') || post.includes('করোনা')|| post.includes('corona')){
+            if(post.includes('Coronavirus') || post.includes('করোনা')|| post.includes('corona') || 
+                post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")){
             _showMisinfoMarker(title, text, link, post, shared_post, nodeObj,fbpostId);
+
             }
         });
     };
@@ -389,14 +405,16 @@ $(document).ready(function() {
      */
     function modalShow(cache = 0, result = null) { // cache true of false
         console.log('Modal Building'+ cache)
-        var modalTitle = "Most Recent Fake-news about Covid19"
+        var modalTitle = "করোনা সংক্রান্ত ভুয়া খবর থেকে সতর্ক থাকুন"
+        var labelMoreButton = "আরও জানুন"
+        var labelCloseButton = "বন্ধ করুন"
+        var labelFake = "গুজব"
+        var labelTrue = "সঠিক"
         if (cache == 0) {
-
-            // getting data from
             $.post(user_study_api)
                 .done(function onSuccess(result) {
                     var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-                    var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">More on CORONAFACTCHECK.NET</a></div></div></div></div>'
+                    var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal"></button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">'+ labelMoreButton +'</a></div></div></div></div>'
                     var bodyTop = '<div class="modal-body"><ul class="list-group">'
                     var bodyBottom = '</ul></div>'
                     var i;
@@ -409,7 +427,8 @@ $(document).ready(function() {
                         fake = result[i].misinfo;
                         truth = result[i].truth;
                         source = result[i].truth_link;
-                        tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> ' + fake + '</div><div id="truth"><strong class="text-success">Truth:</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
+                        tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">'+ labelFake +'</strong> ' + fake + '</div><div id="truth"><strong class="text-success">'+ labelTrue +'</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
+
                         bodyTop += tempDiv;
                     }
                     var modal = top + bodyTop + bodyBottom + bottom;
@@ -425,7 +444,8 @@ $(document).ready(function() {
         } else {
 
             var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-            var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">More on CORONAFACTCHECK.NET</a></div></div></div></div>'
+
+            var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">'+ labelCloseButton +'</button><a class="btn btn-light" href="https://coronafactcheck.net/trueFalse" role="button">'+labelMoreButton+'</a></div></div></div></div>'
             var bodyTop = '<div class="modal-body"><ul class="list-group">'
             var bodyBottom = '</ul></div>'
             var i;
@@ -437,7 +457,7 @@ $(document).ready(function() {
                 fake = result[i].misinfo;
                 truth = result[i].truth;
                 source = result[i].truth_link;
-                tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">Fake-news:</strong> ' + fake + '</div><div id="truth"><strong class="text-success">Truth:</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
+                tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">'+labelFake+'</strong> ' + fake + '</div><div id="truth"><strong class="text-success">'+labelTrue+'</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
                 bodyTop += tempDiv;
             }
             var modal = top + bodyTop + bodyBottom + bottom;
@@ -475,7 +495,6 @@ $(document).ready(function() {
                 console.log(sender.tab ?
                     "from a content script:" + sender.tab.url :
                     "from the extension");
-
                 if (jQuery.isEmptyObject(request.msg) == false) { // cache found
                     console.log("Old Cache Found")
                     modalShow(1, request.msg); //
@@ -522,6 +541,7 @@ $(document).ready(function() {
                 // if (response.cache){
                 //     console.log("Old Cache Found")
                 //     modalShow(1, response.cache); //
+
                 // }
             });
 
@@ -531,6 +551,7 @@ $(document).ready(function() {
             console.log("Covid19 Misinfo Tracker Active on Facebook");
             document.onscroll = loop;
             loop();
+            var uuid = 'undefinedUser';
         }
     })();
 });

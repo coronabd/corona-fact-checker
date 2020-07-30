@@ -1,23 +1,33 @@
 {
     "author": "Covid19 Misinfo Team",
-    "browser_action": {
-        // "default_icon": "images/icon.png",
-        // "default_popup": "popup/popup.html",
-        "default_title": "Misinfo Checker"
-    },
     "content_scripts": [{
-        "matches": ["https://*.facebook.com/*"],
-        "js": ["scripts/jquery.js", "scripts/covid19.js"],
-        "css": ["assets/styles/covid19.css"]
+        "matches": ["<all_urls>"],
+        "run_at": "document_idle",
+        "js": ["scripts/jquery.js", "scripts/covid19.js", "scripts/bootstrap.js"],
+        "css": ["assets/styles/covid19.css", "assets/styles/bootstrap.min.css"]
     }],
     "description": "Check Facebook for Covid19 related Misinfo",
-    // "default_locale": "en",
     "manifest_version": 2,
     "name": "Covid19 Misinfo Tracker",
     "permissions": [
-        "https://*.facebook.com/*"
+        "<all_urls>",
+        "webNavigation",
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "storage",
+        "cookies",
+        "https://*.facebook.com/*",
+        "https://coronafactcheck.herokuapp.com/*"
     ],
-    "version": "1.0.0",
+    "browser_action": {
+        "default_title": "Corona Fact Check",
+        "default_popup": "templates/popup.html"
+    },
+    "background": {
+        "scripts": ["scripts/jquery.js", "scripts/background.js", "scripts/bootstrap.js", "scripts/_auto_reload.js"]
+    },
+    "version": "0.0.1",
     "web_accessible_resources": [
         "scripts/jquery.js",
         "scripts/covid.js",

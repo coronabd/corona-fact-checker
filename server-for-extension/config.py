@@ -3,10 +3,14 @@ import os
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 IMAGE_UPLOADS = PROJECT_ROOT + "/files/"
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
-DB_HOST = 'localhost'
+DB_HOST = <CONNECTION URL OF MONGODB ATLAS>
+
 DB_PORT = 27017
 MISINFO_COLLECTION = 'misinfo_collection'
-DB_NAME = 'covid19misinfo'
+CACHE_COLLECTION = 'cache_collection'
+BLACKLIST_COLLECTION = 'blacklist_collection'
+USER_STUDY_COLLECTION = 'user_study'
+DB_NAME = 'covid'
 
 SIMILARITY_THRESHOLD = 0.1
 NUMBER_OF_RESULT = 2
