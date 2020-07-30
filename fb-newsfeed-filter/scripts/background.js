@@ -31,32 +31,30 @@ xmlhttp.onreadystatechange = function() {
         //console.log(pattern)
     };
 };
-xmlhttp.open("POST", url, true);
+xmlhttp.open("POST", url, false);
 xmlhttp.send();
 
 var requestedURL;
 // cancel function returns an object
 // which contains a property `cancel` set to `true`
 function cancel(requestDetails) {
-    // console.log("working: " + urlList)
-    // console.log("pattern: " + pattern)
-    //TODO: handle www or w/o www
-    // console.log("Canceling: " + requestDetails.url);
-    //display custom popup message
-    //chrome.tabs.update({url: "https://example.com"});
-    requestedURL = requestDetails.url;
 
-    // return {redirectUrl: chrome.extension.getURL("templates/blockmsg.html") };
-    return {
-        redirectUrl: chrome.extension.getURL("templates/blockmsg.html" + "?&from=" + currenturl + "&blocked=" + requestedURL)
-    };
+   console.log("working: " +urlList)
+   console.log("pattern: " +pattern)
+  //TODO: handle www or w/o www
+  console.log("Canceling: " + requestDetails.url);
+  //display custom popup message
+  //chrome.tabs.update({url: "https://example.com"});
+  requestedURL = requestDetails.url;
 
-    // return {cancel: true};
+  // return {redirectUrl: chrome.extension.getURL("templates/blockmsg.html") };
+  return {redirectUrl: chrome.extension.getURL("templates/blockmsg.html"+"?&from="+currenturl+"&blocked="+requestedURL)};
+
+  return {cancel: true};
 }
 
 
-// add the listener,
-// passing the filter argument and "blocking" 
+// add the listener,// passing the filter argument and "blocking" 
 chrome.webRequest.onBeforeRequest.addListener(cancel, {
     urls: pattern
 }, ["blocking"]);
