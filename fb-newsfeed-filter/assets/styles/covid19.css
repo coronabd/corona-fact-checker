@@ -47,6 +47,10 @@
     color: #000000;
 }
 
+.mis-info-text-font{
+    font-family: "Kalpurush ANSI";
+}
+
 .misinfo-marker1{
     float: left;
     background: #F82A2A;
@@ -70,12 +74,11 @@
     font-family: Kalpurush ANSI;
     font-style: normal;
     font-weight: normal;
-    font-size: 8px;
+    font-size: 10px;
     line-height: 15px;
     text-align: center;
+    color: #FFF4F4;
 }
-
-.misinfo-marker-info {}
 
 .misinfo-checker-checked-symbol {
     color: white;
