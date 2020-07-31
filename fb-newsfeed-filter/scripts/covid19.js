@@ -1,6 +1,8 @@
 // constants and flags
 
 const user_study_api = 'http://coronafactcheck.herokuapp.com/covid19/api/user_study_news'
+const user_feedback_api = 'https://coronafactcheck.herokuapp.com/covid19/api/user_feedback'
+
 var uid = 'unnamed'
 
 
@@ -14,6 +16,19 @@ function get_uid() {
     } else {
         return 'unnamed'
     }
+}
+
+function send_feedback(action, fbpost_id) {
+    // parital or full username
+    uid = get_uid();
+    // unix time
+    time = parseInt(Date.now() / 1000)
+    var tmp = {'uid': uid, 'action': action,'post_id': fbpost_id, 'time': time}
+    var tmpdata = JSON.stringify(tmp)
+    $.post(user_feedback_api, {data: tmpdata},  function(data) {
+        console.log('Feedback sent');
+    });
+
 }
 
 $(document).ready(function() {
@@ -80,19 +95,9 @@ $(document).ready(function() {
     //
 
     var _handlefeedbackButtonClick = function(postData, fbpostId) {
-        console.log(fbpostId)
-        //alert("Feedback received. Thanks!!");
+        send_feedback('negative', fbpostId);
         alert(" আপনার  ফিডব্যাকের জন্যে ধন্যবাদ!!");
-        // console.log(postData);
-        // $.post(API_FEEDBACK, postData)
-        //     .done(function onSuccess(result) {
-        //         // result = dummyData;
-        //         alert("Thanks for your feedback");
-        //         console.log('Feedback posted successfully');
-        //     })
-        //     .fail(function onError(xhr, status, error) {
-        //         console.log(error);
-        //     })
+
     };
     //
     //
@@ -109,7 +114,7 @@ $(document).ready(function() {
 
         //str += '<b>Decision Confidence:</b>&nbsp;' + data.confidence + "<br/>";
 
-        str += '<div class="mis-info-text-font"><b> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence *100) + "%</b><br/></div>";
+        str += '<div class="mis-info-text-font"><b> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence * 100) + "%</b><br/></div>";
 
         // if (data.similarity && data.similarity.length > 0){
         //     str += '<b>Similarity:</b>&nbsp;' + data.similarity + "<br/>" + "<hr/>"
@@ -119,9 +124,9 @@ $(document).ready(function() {
         str += '<div><b> সঠিক তথ্য:</b><br/>' + data.explanation + "<br/></div>";
         //str += '<b>Verified By:</b><br/>' + data.verified_by + "<br/>";
 
-       //str += '<b>Verification Link:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
+        //str += '<b>Verification Link:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
 
-        str += '<div><b>তথ্যসূত্র:</b><br/><a href="' + data.verification_link + '">'+  'বিশ্ব স্বাস্থ্য সংস্থা'+'</a></div>';
+        str += '<div><b>তথ্যসূত্র:</b><br/><a href="' + data.verification_link + '">' + 'বিশ্ব স্বাস্থ্য সংস্থা' + '</a></div>';
 
         var info = $('<div></div>').html(str);
 
@@ -260,12 +265,12 @@ $(document).ready(function() {
     // }
     //
 
-     // click counter
-     var click_count=0;
+    // click counter
+    var click_count = 0;
 
 
-     //After clicking the 'Possible misinfo" bar, show the information block
-     var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node, fbpost_id) {
+    //After clicking the 'Possible misinfo" bar, show the information block
+    var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node, fbpost_id) {
         var postData = {
             title: title,
             text: text,
@@ -292,11 +297,16 @@ $(document).ready(function() {
 
 
         //var nodeToFind = $("div[class='_1dwg _1w_m _q7o']"); // look for div with only class = mtm; other posts had two classes --> mtm _5pco or mtm xxxx which caused multiple addition of the wrapper
-        var nodeToFind = $("div[class='story_body_container']");//for mobile
+        var nodeToFind = $("div[class='story_body_container']"); //for mobile
         //var nodeToFind = $("header[class='_7om2 _1o88 _77kd _5qc1']");
-        node.find(nodeToFind).after(misinfoMarkerWrapper);   // change mtm to _1dwg _1w_m _q7o
+        node.find(nodeToFind).after(misinfoMarkerWrapper); // change mtm to _1dwg _1w_m _q7o
 
+
+        /* --------------------------------------------
+            USER CLICK ON BISTARITO JANUN
+        -----------------------------------------------*/
         misinfoMarker.click(function(e) {
+            console.log("CLICK" + title + text + linkUrl + post + shared_post + node + fbpost_id)
             /*$.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo",{ claim: postData.post })
             .done(function onSuccess(result) {
                  console.log(result)
@@ -307,42 +317,42 @@ $(document).ready(function() {
                    console.log(error)
             })*/
 
-        var misinfo_wrapper_id = this.id;
-        var matches = misinfo_wrapper_id.match(/(\d+)/);
-        var misinfo_popupid = matches[0];
+            var misinfo_wrapper_id = this.id;
+            var matches = misinfo_wrapper_id.match(/(\d+)/);
+            var misinfo_popupid = matches[0];
 
-        //count number of the click
-        click_count=click_count+1;
+            //count number of the click
+            click_count = click_count + 1;
 
-        //Print facebook post id
-        //console.log(fbpost_id)
-        var xmlhttp = new XMLHttpRequest();
-        var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo?claim="+postData.post;
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                serverData = JSON.parse(this.responseText);
-                //console.log(serverData[0]['data'])
+            //Print facebook post id
+            //console.log(fbpost_id)
+            var xmlhttp = new XMLHttpRequest();
+            var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo?claim=" + postData.post;
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    serverData = JSON.parse(this.responseText);
+                    //console.log(serverData[0]['data'])
                 };
             };
-        xmlhttp.open("POST", url, false);
-        xmlhttp.send();
+            xmlhttp.open("POST", url, false);
+            xmlhttp.send();
 
-        var sim_score = serverData[0]['similarity']
-        if(sim_score > 0.1){
+            var sim_score = serverData[0]['similarity']
+            if (sim_score > 0.1) {
 
-        var misinfo_result = {
-              "data": {
-                "decision": serverData[0]['data']['misinfo'],
-                "confidence": serverData[0]['similarity'],
-                "explanation": serverData[0]['data']['truth'],
-                "verified_by": serverData[0]['data']['verified_by'],
-                "verification_link": serverData[0]['data']['truth_link']
-              }
-            };
+                var misinfo_result = {
+                    "data": {
+                        "decision": serverData[0]['data']['misinfo'],
+                        "confidence": serverData[0]['similarity'],
+                        "explanation": serverData[0]['data']['truth'],
+                        "verified_by": serverData[0]['data']['verified_by'],
+                        "verification_link": serverData[0]['data']['truth_link']
+                    }
+                };
 
 
 
-        var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData, fbpost_id);
+                var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData, fbpost_id);
 
 
                 var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
@@ -356,6 +366,23 @@ $(document).ready(function() {
                 misinfoMarkerWrapper.append(infoElement);
 
                 infoElement.fadeIn('medium');
+
+                /* --------------------------------------
+                    START send click info to server
+                ----------------------------------------- */
+                send_feedback("click", fbpost_id);
+
+                // uid = get_uid();
+                // var tmp = {'uid': uid, 'action': 'click','post_id': fbpost_id}
+                // var tmpdata = JSON.stringify(tmp)
+                // $.post(user_feedback_api, {data: tmpdata},  function(data) {
+                //     console.log('Sent data success');
+                // });
+
+                /* --------------------------------
+                   END send click info to server
+                --------------------------------  */
+
             }
         });
 
@@ -388,7 +415,7 @@ $(document).ready(function() {
             var link = linkObj.attr('href');
 
             //facebook post Id
-            fbpostId = nodeObj.attr('id');
+            fbpost_id = JSON.parse(nodeObj.attr('data-store')).feedback_target;
 
             // title is the headline of a news article or video
             // text is the subtitle or thumbnail text
@@ -401,9 +428,9 @@ $(document).ready(function() {
             // if (title) console.log('title', title);
             linkObj.mouseleave();
             //_callmisinfoApi(title, text, link, post, shared_post, nodeObj);
-            if(post.includes('Coronavirus') || post.includes('করোনা')|| post.includes('corona') || 
-                post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")){
-            _showMisinfoMarker(title, text, link, post, shared_post, nodeObj,fbpostId);
+            if (post.includes('Coronavirus') || post.includes('করোনা') || post.includes('corona') ||
+                post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")) {
+                _showMisinfoMarker(title, text, link, post, shared_post, nodeObj, fbpost_id);
             }
         });
     };
@@ -556,10 +583,11 @@ $(document).ready(function() {
         }
 
         if (IS_FACEBOOK) {
+            alert('Facebook!')
             console.log("Covid19 Misinfo Tracker Active on Facebook");
             document.onscroll = loop;
             loop();
-            var uuid = 'undefinedUser';
+            var uid = 'undefinedUser';
         }
     })();
 });
