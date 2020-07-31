@@ -3,7 +3,7 @@ import os
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 IMAGE_UPLOADS = PROJECT_ROOT + "/files/"
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
-DB_HOST = <CONNECTION URL OF MONGODB ATLAS>
+DB_HOST = "mongodb://riy:testpass@cluster0-shard-00-00-otmbj.mongodb.net:27017,cluster0-shard-00-01-otmbj.mongodb.net:27017,cluster0-shard-00-02-otmbj.mongodb.net:27017/covid?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority"
 
 DB_PORT = 27017
 MISINFO_COLLECTION = 'misinfo_collection'

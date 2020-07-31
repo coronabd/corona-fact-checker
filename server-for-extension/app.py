@@ -79,19 +79,16 @@ def fetching_user_news():
     news_list = db_operation.fetch_all('user_study')
     return json.dumps(news_list)
 
-@app.route('/user_feedback', methods=['POST'])
+@app.route('/covid19/api/user_feedback', methods=['POST'])
 def receive_user_feedback():
-    feedback = request.values.get('feedback')
-    print(feedback)
+    feedback = request.values.get('data')
     feedback = json.loads(feedback)
-    user = feedback['uuid']
-    verdict ="vote_down" if feedback['verdict']==0 else "vote_up"
-    item_id = feedback['item_id']
-    print(user, verdict, item_id)
-    db_operation.write_feedback(item_id, user, verdict)
+    user = feedback['uid']
+    action = feedback['action']
+    post_id = feedback['post_id']
+    time = feedback['time']
+    db_operation.write_feedback(user,action,post_id, time)
     return 'Sucesss'
 
-
-
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0',port=5005, debug=True)
+    app.run(ssl_context='adhoc', debug=True)
