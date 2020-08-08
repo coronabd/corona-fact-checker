@@ -3,8 +3,8 @@
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "run_at": "document_idle",
-        "js": ["scripts/jquery.js", "scripts/covid19.js", "scripts/bootstrap.js"],
-        "css": ["assets/styles/covid19.css", "assets/styles/bootstrap.min.css"]
+        "js": ["scripts/jquery.js", "scripts/covid19.js"],
+        "css": ["assets/styles/covid19.css"]
     }],
     "description": "Check Facebook for Covid19 related Misinfo",
     "manifest_version": 2,

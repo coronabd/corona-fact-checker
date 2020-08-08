@@ -358,8 +358,8 @@ $(document).ready(function() {
 
                 var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData, fbpost_id);
 
-
                 var closeButton = $("<div class='misinfo-marker-info-close-btn'>x</div>");
+
                 infoElement.append(closeButton);
 
                 closeButton.click(function(e) {

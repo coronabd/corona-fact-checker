@@ -16,7 +16,7 @@ misinfo_collection = db[app.config['MISINFO_COLLECTION']]
 cache_collection = db[app.config['CACHE_COLLECTION']]
 blacklist_collection = db[app.config['BLACKLIST_COLLECTION']]
 user_study = db[app.config['USER_STUDY_COLLECTION']]
-
+user_feedback_collection = db['user_feedback']
 
 def insert_into_misinfo_collection(data):
     post_id = misinfo_collection.insert_one(data).inserted_id
@@ -77,7 +77,8 @@ def fetch_all(table_name):
         claim_lists.append(str_row)
     return claim_lists
 
-def write_feedback(item_id, user, verdict):
-    query = {'_id': ObjectId(item_id)}
-    result = user_study.update_one(query,{"$push": {verdict: user} })
+def write_feedback(user, action, post_id, time):
+    result = user_feedback_collection.insert_one({'user': user, 'action': action, 'post_id': post_id, 'time': time}).inserted_id
+    # query = {'_id': ObjectId(item_id)}
+    # result = user_study.update_one(query,{"$push": {verdict: user} })
     print(result)
