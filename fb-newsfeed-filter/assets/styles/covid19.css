@@ -1,10 +1,13 @@
 .misinfo-marker-span {
-    height: 2em;
     text-align: center;
     line-height: 2em;
-    color: white !important;
-    margin-top: 0.5em;
     cursor: pointer;
+    float: right;
+    width: 54%;
+    background: #77A653 !important;
+    border-radius: 10px;
+    height: auto;
+    margin-top: 0px;
 }
 
 .misinfo-marker-is-misinfo {
@@ -17,7 +20,11 @@
 
 .misinfo-marker-wrapper {
     position: relative;
-    margin-bottom: 10px;
+    background: #FFF4F4;
+    height: 66px;
+    width: 98%;
+    margin-bottom: 0px;
+    padding: 10px;
 }
 
 .misinfo-marker-info-close-btn {
@@ -25,7 +32,11 @@
     position: absolute;
     top: 15px;
     right: 15px;
-    color: white;
+    font-weight: bolder;
+    padding: 5px;
+    border-radius: 20px;
+    background: #ed7070;
+    color: #efebec;
 }
 
 .misinfo-marker-info-wrapper {
@@ -39,7 +50,63 @@
     color: #000000;
 }
 
-.misinfo-marker-info {}
+.mis-info-text-font{
+    font-family: "Kalpurush ANSI";
+    font-style: normal;
+    font-size: 17px;
+    line-height: 29px;
+    letter-spacing: 0.03em;
+    color: rgb(49, 47, 47);
+    font-weight: bold;
+}
+.misinfo-marker-info-padding{
+    padding:5px;
+}
+.misinfo_feedback_class{
+    color: rgb(249, 88, 88);
+    font-family: "Kalpurush ANSI";
+    font-style: normal;
+    font-size: 17px;
+    line-height: 29px;
+    letter-spacing: 0.03em;
+    font-weight: bold
+}
+.misinfo-marker1{
+    float: left;
+    background: #F82A2A;
+    border-radius: 10px;
+    width: 45%;
+}
+
+.misinfo-marker1-heading1{
+    font-family: Kalpurush ANSI;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    line-height: 29px;
+    letter-spacing: 0.03em;
+    color: #FFF4F4;
+    text-align: center;
+    /* border: 0.4px solid #FFF4F4; */
+    font-weight: bold;
+}
+.misinfo-marker1-heading2{
+    font-family: Kalpurush ANSI;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 15px;
+    text-align: center;
+    color: #FFF4F4;
+}
+
+.misinfo-marker-info-title-box{
+   text-align:center;
+    background: rgb(248, 42, 42);
+    border-radius: 10px;
+    padding:10px;
+
+}
 
 .misinfo-checker-checked-symbol {
     color: white;
@@ -94,6 +161,4 @@
     padding-top: 5px;
 }
 
-.misinfo_feedback_class{
 
-}
