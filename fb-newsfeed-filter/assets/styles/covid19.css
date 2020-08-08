@@ -32,8 +32,11 @@
     position: absolute;
     top: 15px;
     right: 15px;
-    color: black;
     font-weight: bolder;
+    padding: 5px;
+    border-radius: 20px;
+    background: #ed7070;
+    color: #efebec;
 }
 
 .misinfo-marker-info-wrapper {
@@ -49,8 +52,25 @@
 
 .mis-info-text-font{
     font-family: "Kalpurush ANSI";
+    font-style: normal;
+    font-size: 17px;
+    line-height: 29px;
+    letter-spacing: 0.03em;
+    color: rgb(49, 47, 47);
+    font-weight: bold;
 }
-
+.misinfo-marker-info-padding{
+    padding:5px;
+}
+.misinfo_feedback_class{
+    color: rgb(249, 88, 88);
+    font-family: "Kalpurush ANSI";
+    font-style: normal;
+    font-size: 17px;
+    line-height: 29px;
+    letter-spacing: 0.03em;
+    font-weight: bold
+}
 .misinfo-marker1{
     float: left;
     background: #F82A2A;
@@ -78,6 +98,14 @@
     line-height: 15px;
     text-align: center;
     color: #FFF4F4;
+}
+
+.misinfo-marker-info-title-box{
+   text-align:center;
+    background: rgb(248, 42, 42);
+    border-radius: 10px;
+    padding:10px;
+
 }
 
 .misinfo-checker-checked-symbol {
@@ -133,6 +161,4 @@
     padding-top: 5px;
 }
 
-.misinfo_feedback_class{
 
-}

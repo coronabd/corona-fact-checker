@@ -95,26 +95,30 @@ $(document).ready(function() {
 
         //str += '<b>Decision Confidence:</b>&nbsp;' + data.confidence + "<br/>";
 
-        str += '<div class="mis-info-text-font"><b> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence *100) + "%</b><br/></div>";
+        str += '<div class="mis-info-text-font misinfo-marker-info-padding"><b> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence *100) + "%</b><br/></div>";
+
 
         // if (data.similarity && data.similarity.length > 0){
         //     str += '<b>Similarity:</b>&nbsp;' + data.similarity + "<br/>" + "<hr/>"
         // }
 
         //str += '<b>Explanation:</b><br/>' + data.explanation + "<br/>";
-        str += '<div><b> সঠিক তথ্য:</b><br/>' + data.explanation + "<br/></div>";
+
+        str += '<div class="misinfo-marker-info-padding" ><b class="mis-info-text-font"> সঠিক তথ্য:</b><br/>' + data.explanation + "<br/></div>";
+
         //str += '<b>Verified By:</b><br/>' + data.verified_by + "<br/>";
 
        //str += '<b>Verification Link:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
 
-        str += '<div><b>তথ্যসূত্র:</b><br/><a href="' + data.verification_link + '">'+  'বিশ্ব স্বাস্থ্য সংস্থা'+'</a></div>';
+        str += '<div class="misinfo-marker-info-padding"><b  class="mis-info-text-font">তথ্যসূত্র:</b><br/><a  href="' + data.verification_link + '">'+  ' বিস্তারিত জানতে এখানে ক্লিক করুন'+'</a></div>';
+
 
         var info = $('<div></div>').html(str);
 
         // reportButtonWrapper.find('a').html('Report misinfo');
         // reportButtonWrapper.find('a').css('color', '#ff9022');
 
-        var feedbackButton = $('<div><a></a></div>');
+        var feedbackButton = $('<div class="misinfo_feedback_class"><a></a></div>');
         feedbackButton.attr('misinfoId', id)
         // feedbackButton.html('This should not be a Misinfo')
         feedbackButton.html('আমি মনে করি না এই তথ্যটি ভুয়া')
@@ -266,9 +270,10 @@ $(document).ready(function() {
 
         misinfoCount = misinfoCount + 1;
 
+
         //var ismisinfo = misinfo_result.decision === 'misinfo';
 
-        var misinfoMarker = $("<div class='misinfo-marker1'><div class='misinfo-marker1-heading1'>এটি একটি ভুয়া তত্থ্য </div><div class='misinfo-marker1-heading2'> বিশেষজ্ঞরা এটাকে ফেক নিউজ হিসেবে নিশ্চিত করেছেন </div></div><div class='misinfo-marker-span'><div class='misinfo-marker1-heading1'>বিস্তারিত জানুন</div><div class='misinfo-marker1-heading2'>তথ্যটি কেন ভুয়া, সে সম্পর্কিত তথ্য প্রমাণ জানতে ক্লিক করুন</div></div>");
+        var misinfoMarker = $("<div class='misinfo-marker1'><div class='misinfo-marker1-heading1'>এটি একটি ভুয়া  তথ্য </div><div class='misinfo-marker1-heading2'> বিশেষজ্ঞরা এটাকে ফেক নিউজ হিসেবে নিশ্চিত করেছেন </div></div><div class='misinfo-marker-span'><div class='misinfo-marker1-heading1'>বিস্তারিত জানুন</div><div class='misinfo-marker1-heading2'>তথ্যটি কেন ভুয়া, সে সম্পর্কিত তথ্য প্রমাণ জানতে ক্লিক করুন</div></div>");
 
         misinfoMarker.attr('id', _getmisinfoLabelId(misinfoCount));
 
@@ -390,6 +395,7 @@ $(document).ready(function() {
             // if (title) console.log('title', title);
             linkObj.mouseleave();
             //_callmisinfoApi(title, text, link, post, shared_post, nodeObj);
+
             if(post.includes('Coronavirus') || post.includes('করোনা')|| post.includes('corona') || 
                 post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")){
             _showMisinfoMarker(title, text, link, post, shared_post, nodeObj,fbpostId);
