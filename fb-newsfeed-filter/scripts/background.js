@@ -1,9 +1,9 @@
 // ----------------- constants ---------------------
 const user_study_api = 'http://coronafactcheck.herokuapp.com/covid19/api/user_study_news'
+const url = "https://coronafactcheck.herokuapp.com/covid19/api/get_blacklist";
 const time_gap = 2
 const FB_URL = 'https://www.facebook.com/'
-const user_feedback_api = ''
-
+var urlList = []
 var pattern = ["https://www.facebook.com/lalsalu.page/posts/2769601203135709",
     "https://www.facebook.com/groups/brahmanbarian2017/permalink/3068719746521623/",
     "https://www.facebook.com/mh.mon.94/videos/638619193593343/",
@@ -14,25 +14,25 @@ var pattern = ["https://www.facebook.com/lalsalu.page/posts/2769601203135709",
 var currenturl = ""
 
 //post request to server
-var serverData;
-var xmlhttp = new XMLHttpRequest();
-var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_blacklist";
-//collect all the blacklisted urls in this urlList
-var urlList = [];
-xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        serverData = JSON.parse(this.responseText);
-        //console.log(serverData)
-        for (i = 0; i < serverData.length; i++) {
-            //console.log(serverData[i]['url'])
-            urlList.push(serverData[i]['url'])
-        };
-        // console.log(urlList)
-        //console.log(pattern)
-    };
-};
-xmlhttp.open("POST", url, false);
-xmlhttp.send();
+// var serverData;
+// var xmlhttp = new XMLHttpRequest();
+
+// //collect all the blacklisted urls in this urlList
+// var urlList = [];
+// xmlhttp.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//         serverData = JSON.parse(this.responseText);
+//         //console.log(serverData)
+//         for (i = 0; i < serverData.length; i++) {
+//             //console.log(serverData[i]['url'])
+//             urlList.push(serverData[i]['url'])
+//         };
+//         // console.log(urlList)
+//         //console.log(pattern)
+//     };
+// };
+// xmlhttp.open("POST", url, false);
+// xmlhttp.send();
 
 var requestedURL;
 // cancel function returns an object
@@ -212,7 +212,6 @@ function memorySizeOf(obj) {
 function fetchdata() {
     $.post(user_study_api)
         .done(function onSuccess(result) {
-            console.log(result)
             chrome.storage.local.set({
                 'CORONAMISINFO': result
             }, function() {
@@ -222,8 +221,17 @@ function fetchdata() {
         .fail(function onError(xhr, status, error) {
             console.log(error)
         })
-}
+    // get blacklist
+    $.post(url).done(function onSuccess(result) {
+        console.log("result get blacklist",result);
+        for (i = 0; i < result.length; i++) {
+            urlList.push(result[i]['url'])
+        };
 
+    }).fail( function onError(xhr, status, error){
+        console.log(error)
+    })
+}
 
 console.log("browser started, fetching data");
 fetchdata();

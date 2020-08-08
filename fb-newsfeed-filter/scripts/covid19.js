@@ -1,9 +1,15 @@
 // constants and flags
 
 const user_study_api = 'http://coronafactcheck.herokuapp.com/covid19/api/user_study_news'
+const user_feedback_api = 'https://coronafactcheck.herokuapp.com/covid19/api/user_feedback'
+var uid = ''
 
 $(document).ready(function() {
     var IS_FACEBOOK = false;
+
+    /* ----------------------------------------------------------
+        facebook DOM Classes containing posts
+    ---------------------------------------------------------- */
 
     var facebook_link_post_container_text_wrapper = '._6m2._1zpr.clearfix._dcs';
     //var facebook_link_post_container = '._5jmm._5pat';
@@ -35,6 +41,45 @@ $(document).ready(function() {
     var facebook_link_post_container_text = '._2rbw._5tg_';
     var misinfo_marker_container_fb = '._5rgt._5nk5._5msi';
 
+    /**
+     * Gets user id from DOM.
+     * @returns {string} userid
+     */
+
+    function get_uid() {
+        var re = new RegExp('/\/[a-zA-Z0-9]{3,}')
+        var user_info = document.querySelector('._5xu4 a').href;
+        if (user_info) {
+            it = user_info.matchAll('\/[a-zA-Z0-9]{3,}')
+            return it.next().value[0];
+
+        } else {
+            return 'unnamed'
+        }
+    }
+    /**
+     * Sends feed back to Flask API using jQuery. 
+     * @param {string} action - what the user has done. {'click','negative'}
+     * @param {object} fbpost_id - global post id for the post.
+     */
+
+    function send_feedback(action, fbpost_id) {
+        // unix time
+        time = parseInt(Date.now() / 1000)
+        var tmp = {
+            'uid': uid, // uid is globally set
+            'action': action,
+            'post_id': fbpost_id,
+            'time': time
+        }
+        var tmpdata = JSON.stringify(tmp)
+        $.post(user_feedback_api, {
+            data: tmpdata
+        }, function(data) {
+            console.log('Feedback sent');
+        });
+    }
+
 
     var _handleClickbairReport = function(postData) {
 
@@ -65,20 +110,14 @@ $(document).ready(function() {
     };
     //
 
+    /**
+    * Handles user's feedback
+    *
+    *
+    */
     var _handlefeedbackButtonClick = function(postData, fbpostId) {
-        console.log(fbpostId)
-        //alert("Feedback received. Thanks!!");
-        alert(" আপনার  ফিডব্যাকের জন্যে ধন্যবাদ!!");
-        // console.log(postData);
-        // $.post(API_FEEDBACK, postData)
-        //     .done(function onSuccess(result) {
-        //         // result = dummyData;
-        //         alert("Thanks for your feedback");
-        //         console.log('Feedback posted successfully');
-        //     })
-        //     .fail(function onError(xhr, status, error) {
-        //         console.log(error);
-        //     })
+        alert(" আপনার মতামতের জন্যে ধন্যবাদ।");
+        send_feedback('negative', fbpostId);
     };
     //
     //
@@ -95,8 +134,7 @@ $(document).ready(function() {
 
         //str += '<b>Decision Confidence:</b>&nbsp;' + data.confidence + "<br/>";
 
-        str += '<div class="mis-info-text-font misinfo-marker-info-padding"><b> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence *100) + "%</b><br/></div>";
-
+        str += '<div class="mis-info-text-font"><b> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence * 100) + "%</b><br/></div>";
 
         // if (data.similarity && data.similarity.length > 0){
         //     str += '<b>Similarity:</b>&nbsp;' + data.similarity + "<br/>" + "<hr/>"
@@ -108,9 +146,9 @@ $(document).ready(function() {
 
         //str += '<b>Verified By:</b><br/>' + data.verified_by + "<br/>";
 
-       //str += '<b>Verification Link:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
+        //str += '<b>Verification Link:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
 
-        str += '<div class="misinfo-marker-info-padding"><b  class="mis-info-text-font">তথ্যসূত্র:</b><br/><a  href="' + data.verification_link + '">'+  ' বিস্তারিত জানতে এখানে ক্লিক করুন'+'</a></div>';
+        str += '<div><b>তথ্যসূত্র:</b><br/><a href="' + data.verification_link + '">' + 'বিশ্ব স্বাস্থ্য সংস্থা' + '</a></div>';
 
 
         var info = $('<div></div>').html(str);
@@ -222,18 +260,8 @@ $(document).ready(function() {
             }
         };
 
-        // will handle the API call later. Currently working with some dummy data.
-        var random_boolean = Math.random() >= 0.7;
+        
         _handlemisinfoApiSuccess(misinfo_result.data, node, postData);
-
-        // if (random_boolean) {
-        //   _handlemisinfoApiSuccess(misinfo_result.data, node, postData);
-        // }
-        // else {
-        //   _handlemisinfoApiSuccess(non_misinfo_result.data, node, postData);
-        // }
-
-
         // $.post(API_URL, postData)
         //     .done(function onSuccess(result) {
         //         // result = dummyData;
@@ -250,16 +278,13 @@ $(document).ready(function() {
     // }
     //
 
-
-     // click counter
-     var click_count=0;
-
-
-     //After clicking the 'Possible misinfo" bar, show the information block
-     var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node, fbpost_id) {
+    // click counter
+    var click_count = 0;
 
 
-            var postData = {
+    //After clicking the 'Possible misinfo" bar, show the information block
+    var _showMisinfoMarker = function(title, text, linkUrl, post, shared_post, node, fbpost_id) {
+        var postData = {
             title: title,
             text: text,
             url: linkUrl,
@@ -286,72 +311,77 @@ $(document).ready(function() {
 
 
         //var nodeToFind = $("div[class='_1dwg _1w_m _q7o']"); // look for div with only class = mtm; other posts had two classes --> mtm _5pco or mtm xxxx which caused multiple addition of the wrapper
-        var nodeToFind = $("div[class='story_body_container']");//for mobile
+        var nodeToFind = $("div[class='story_body_container']"); //for mobile
         //var nodeToFind = $("header[class='_7om2 _1o88 _77kd _5qc1']");
-        node.find(nodeToFind).after(misinfoMarkerWrapper);   // change mtm to _1dwg _1w_m _q7o
+        node.find(nodeToFind).after(misinfoMarkerWrapper); // change mtm to _1dwg _1w_m _q7o
 
+
+        /* --------------------------------------------
+            USER CLICK ON BISTARITO JANUN
+        -----------------------------------------------*/
         misinfoMarker.click(function(e) {
-            /*$.post("https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo",{ claim: postData.post })
-            .done(function onSuccess(result) {
-                 console.log(result)
-                 var result = result;
-                 //_handlemisinfoApiSuccess(result, node, postData);
-            })
-            .fail(function onError(xhr, status, error) {
-                   console.log(error)
-            })*/
+            console.log("CLICK" + title + text + linkUrl + post + shared_post + node + fbpost_id)
+            var misinfo_wrapper_id = this.id;
+            var matches = misinfo_wrapper_id.match(/(\d+)/);
+            var misinfo_popupid = matches[0];
 
-        var misinfo_wrapper_id = this.id;
-        var matches = misinfo_wrapper_id.match(/(\d+)/);
-        var misinfo_popupid = matches[0];
+            //count number of the click
+            click_count = click_count + 1;
 
-        //count number of the click
-        click_count=click_count+1;
-
-        //Print facebook post id
-        //console.log(fbpost_id)
-        var xmlhttp = new XMLHttpRequest();
-        var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo?claim="+postData.post;
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                serverData = JSON.parse(this.responseText);
-                //console.log(serverData[0]['data'])
+            //Print facebook post id
+            //console.log(fbpost_id)
+            var xmlhttp = new XMLHttpRequest();
+            var url = "https://coronafactcheck.herokuapp.com/covid19/api/get_related_misinfo?claim=" + postData.post;
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    serverData = JSON.parse(this.responseText);
+                    //console.log(serverData[0]['data'])
                 };
             };
-        xmlhttp.open("POST", url, false);
-        xmlhttp.send();
+            xmlhttp.open("POST", url, false);
+            xmlhttp.send();
 
-        var sim_score = serverData[0]['similarity']
-        if(sim_score > 0.1){
+            var sim_score = serverData[0]['similarity']
+            if (sim_score > 0.1) {
 
-        var misinfo_result = {
-              "data": {
-                "decision": serverData[0]['data']['misinfo'],
-                "confidence": serverData[0]['similarity'],
-                "explanation": serverData[0]['data']['truth'],
-                "verified_by": serverData[0]['data']['verified_by'],
-                "verification_link": serverData[0]['data']['truth_link']
-              }
-            };
-
-
-
-        var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData, fbpost_id);
+                var misinfo_result = {
+                    "data": {
+                        "decision": serverData[0]['data']['misinfo'],
+                        "confidence": serverData[0]['similarity'],
+                        "explanation": serverData[0]['data']['truth'],
+                        "verified_by": serverData[0]['data']['verified_by'],
+                        "verification_link": serverData[0]['data']['truth_link']
+                    }
+                };
 
 
-        var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
-        infoElement.append(closeButton);
 
-            closeButton.click(function(e) {
-                infoElement.fadeOut('medium');
-            });
+                var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData, fbpost_id);
 
-            infoElement.hide();
-            misinfoMarkerWrapper.append(infoElement);
 
-            infoElement.fadeIn('medium');
+                var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
+                infoElement.append(closeButton);
+
+                closeButton.click(function(e) {
+                    infoElement.fadeOut('medium');
+                });
+
+                infoElement.hide();
+                misinfoMarkerWrapper.append(infoElement);
+
+                infoElement.fadeIn('medium');
+
+                /* --------------------------------------
+                    START send click info to server
+                ----------------------------------------- */
+                send_feedback("click", fbpost_id);
+
+                /* --------------------------------
+                   END send click info to server
+                --------------------------------  */
+
             }
-            });
+        });
 
     };
 
@@ -382,7 +412,8 @@ $(document).ready(function() {
             var link = linkObj.attr('href');
 
             //facebook post Id
-            fbpostId = nodeObj.attr('id');
+            fbpost_id = JSON.parse(nodeObj.attr('data-store')).feedback_target;
+            uid = JSON.parse(nodeObj.attr('data-store')).actor_name; // future plan: move out of this function
 
             // title is the headline of a news article or video
             // text is the subtitle or thumbnail text
@@ -395,22 +426,22 @@ $(document).ready(function() {
             // if (title) console.log('title', title);
             linkObj.mouseleave();
             //_callmisinfoApi(title, text, link, post, shared_post, nodeObj);
-
-            if(post.includes('Coronavirus') || post.includes('করোনা')|| post.includes('corona') || 
-                post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")){
-            _showMisinfoMarker(title, text, link, post, shared_post, nodeObj,fbpostId);
+            if (post.includes('Coronavirus') || post.includes('করোনা') || post.includes('corona') ||
+                post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")) {
+                _showMisinfoMarker(title, text, link, post, shared_post, nodeObj, fbpost_id);
 
             }
         });
     };
 
+
     /**
      * Builds and show the model.
      * @param {bool} cache - cache exist or not.
-     * @param {object} result - json object for cache.
+     * @param {object} result - json object containing the cache.
      */
     function modalShow(cache = 0, result = null) { // cache true of false
-        console.log('Modal Building'+ cache)
+        console.log('Modal Building' + cache)
         var modalTitle = "করোনা সংক্রান্ত ভুয়া খবর থেকে সতর্ক থাকুন"
         var labelMoreButton = "আরও জানুন"
         var labelCloseButton = "বন্ধ করুন"
@@ -419,79 +450,49 @@ $(document).ready(function() {
         if (cache == 0) {
             $.post(user_study_api)
                 .done(function onSuccess(result) {
-                    var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-                    var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal"></button><a class="btn btn-primary" href="https://coronafactcheck.net/trueFalse" role="button">'+ labelMoreButton +'</a></div></div></div></div>'
-                    var bodyTop = '<div class="modal-body"><ul class="list-group">'
-                    var bodyBottom = '</ul></div>'
-                    var i;
-                    var tempDiv;
-                    var fake;
-                    var truth;
+
+                    var top = '<div id="myModal" class="modal"><div class="modal-content"><div class="title-background"><div id="closeBtn" class="close">x</div><p class="title-text">নিচের ভুয়া তথ্যগুলো থেকে সতর্ক থাকুন</p></div>'
                     result = JSON.parse(result)
                     for (i = 0; i < result.length; i++) {
 
                         fake = result[i].misinfo;
                         truth = result[i].truth;
                         source = result[i].truth_link;
-                        tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">'+ labelFake +'</strong> ' + fake + '</div><div id="truth"><strong class="text-success">'+ labelTrue +'</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
-
-                        bodyTop += tempDiv;
+                        temp_li_grp_item = '<div class="list-group-item"><div class="rumor-title">গুজব</div><div id="fake" class="rumor">' + fake + '</div><div class="truth-title">সত্য</div><div id="truth" class="truth">' + truth + '</div></div>'
+                        top += temp_li_grp_item;
                     }
-                    var modal = top + bodyTop + bodyBottom + bottom;
+                    var bottom = '<div class="title-background green-bg"><a class="title-text">আরও জানতে এখানে ক্লিক করুন</a></div></div></div>'
+                    var modal = top + bottom;
 
                     $("body").append(modal)
-                    $('#misinfomodal').modal({
-                        keyboard: true
-                    })
+                    // $('#misinfomodal').modal({
+                    //     keyboard: true
+                    // })
                 })
                 .fail(function onError(xhr, status, error) {
                     console.log(error)
                 })
         } else {
-
-            var top = '<div class="modal fade" id="misinfomodal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title" id="staticBackdropLabel">' + modalTitle + '</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-
-            var bottom = '<div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">'+ labelCloseButton +'</button><a class="btn btn-light" href="https://coronafactcheck.net/trueFalse" role="button">'+labelMoreButton+'</a></div></div></div></div>'
-            var bodyTop = '<div class="modal-body"><ul class="list-group">'
-            var bodyBottom = '</ul></div>'
-            var i;
-            var tempDiv;
-            var fake;
-            var truth;
+            var top = '<div id="myModal" class="modal"><div class="modal-content"><div class="title-background"><div id="closeBtn" class="close">&times</div><p class="title-text">নিচের ভুয়া তথ্যগুলো থেকে সতর্ক থাকুন</p></div>'
             result = JSON.parse(result)
             for (i = 0; i < result.length; i++) {
+
                 fake = result[i].misinfo;
                 truth = result[i].truth;
                 source = result[i].truth_link;
-                tempDiv = '<li class="list-group-item"><div id="fake"><strong class="text-danger">'+labelFake+'</strong> ' + fake + '</div><div id="truth"><strong class="text-success">'+labelTrue+'</strong> ' + truth + '</div><div id="source"><strong class="text-secondary">Source: </strong> ' + source + '</div></li>';
-                bodyTop += tempDiv;
+                temp_li_grp_item = '<div class="list-group-item"><div class="rumor-title">গুজব</div><div id="fake" class="rumor">' + fake + '</div><div class="truth-title">সত্য</div><div id="truth" class="truth">' + truth + '</div></div>'
+                top += temp_li_grp_item;
             }
-            var modal = top + bodyTop + bodyBottom + bottom;
-
+            var bottom = '<div class="footer"><a href="https://coronafactcheck.net" target="_blank">আরও জানতে এখানে ক্লিক করুন</a></div></div></div>'
+            var modal = top + bottom;
             $("body").append(modal)
-            $('#misinfomodal').modal({
-                keyboard: true
-            })
         }
 
-        $('#misinfomodal').modal("toggle");
+        $("#myModal").toggle();
+        $("#closeBtn").click(function() {
+            $("#myModal").toggle();
+        });
     }
-
-    // function modalAutoSetup() {
-    //     var flag;
-    //     chrome.runtime.sendMessage({ msg: "sendcookie" }, function (response) {
-    //         flag = response.msg; // cookie
-    //         console.log("GOT COOKIE: "+flag)
-    //         if (flag == "shown") {
-    //             console.log("COOKIE: shown\n Modal ran in past");
-    //         }
-    //         else {
-    //             chrome.runtime.sendMessage({ msg: "checkcache" });
-    //             console.log("Modal run now");
-    //             chrome.runtime.sendMessage({ msg: "setcookie" });
-    //         }
-    //     });
-    // }
 
     (function init() {
 
@@ -503,7 +504,14 @@ $(document).ready(function() {
                     "from the extension");
                 if (jQuery.isEmptyObject(request.msg) == false) { // cache found
                     console.log("Old Cache Found")
-                    modalShow(1, request.msg); //
+
+                    if ($('#myModal').length) {
+                        console.log($('#myModal').length)
+                        $("#myModal").toggle();
+                    } else {
+                        modalShow(1, request.msg);
+                    }
+
 
                 } else if (jQuery.isEmptyObject(request.msg)) { // no cache found
                     console.log("Old Cache Not Found");
@@ -511,8 +519,6 @@ $(document).ready(function() {
 
                 }
             });
-
-
         if (document.URL.match("(www.|http:\/\/|https:\/\/|m.)(facebook|fb).com")) {
             IS_FACEBOOK = true;
             console.log('---------- NEW LOOP -----------')
@@ -529,8 +535,7 @@ $(document).ready(function() {
             port.onMessage.addListener(function(response) {
                 if (response.msg == 'shown') {
                     console.log('Already Shown')
-                }
-                 else if (response.msg == 'notshown'){
+                } else if (response.msg == 'notshown') {
                     console.log('will show now')
                     port.postMessage({
                         msg: 'checkcache'
@@ -538,17 +543,16 @@ $(document).ready(function() {
                     port.postMessage({
                         msg: 'setcookie'
                     });
-                }
-                else {
+                } else {
                     console.log('cache found');
-                    modalShow(1, response.msg); //
+
+                    if ($('#myModal').length) {
+                        console.log($('#myModal').length)
+                        $("#myModal").toggle();
+                    } else {
+                        modalShow(1, response.msg);
+                    }
                 }
-
-                // if (response.cache){
-                //     console.log("Old Cache Found")
-                //     modalShow(1, response.cache); //
-
-                // }
             });
 
         }
@@ -557,7 +561,6 @@ $(document).ready(function() {
             console.log("Covid19 Misinfo Tracker Active on Facebook");
             document.onscroll = loop;
             loop();
-            var uuid = 'undefinedUser';
         }
     })();
 });
