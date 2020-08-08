@@ -31,12 +31,12 @@
     cursor: pointer;
     position: absolute;
     top: 15px;
-    right: 15px;
+    right: 18px;
     font-weight: bolder;
-    padding: 5px;
     border-radius: 20px;
     background: #ed7070;
     color: #efebec;
+    padding: 0 5px;
 }
 
 .misinfo-marker-info-wrapper {
@@ -48,6 +48,7 @@
     margin-top: 2em;
     padding: 40px 30px 30px 30px;
     color: #000000;
+    text-align:center;
 }
 
 .mis-info-text-font{
@@ -56,24 +57,45 @@
     font-size: 17px;
     line-height: 29px;
     letter-spacing: 0.03em;
-    color: rgb(49, 47, 47);
     font-weight: bold;
 }
 .misinfo-marker-info-padding{
-    padding:5px;
+    padding:10px;
 }
 .misinfo_feedback_class{
-    color: rgb(249, 88, 88);
     font-family: "Kalpurush ANSI";
     font-style: normal;
-    font-size: 17px;
+    font-size: 15px;
     line-height: 29px;
     letter-spacing: 0.03em;
-    font-weight: bold
+    font-weight: bold;
+    padding: 2px;
+    background: #ce4242;
+    border-radius: 12px;
+    color: #fcf8f1;
 }
+.misinfo-marker-info-prob{
+    color: #f6e2e2;
+    background: #dd6c6c;
+    border-radius: 23px;
+    padding: 10px;
+}
+.misinfo-marker-info-truth{
+    background: #83b260;
+    color: #f2fff3;
+    border-radius: 23px;
+    padding: 10px;
+}
+.misinfo-marker-info-truth-link{
+    padding: 10px;
+    background: #e59a34;
+    border-radius: 12px;
+    color: white !important;
+}
+
 .misinfo-marker1{
     float: left;
-    background: #F82A2A;
+    background: #d51414;
     border-radius: 10px;
     width: 45%;
 }
@@ -161,4 +183,114 @@
     padding-top: 5px;
 }
 
+/* ----------
+Modal
+---------------------*/
 
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 400; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.8); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  position: relative;
+  top: 5px;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 5px;
+  width: 90%; 
+  border-radius: 10px;
+}
+
+.list-group {
+  margin-left: 0;
+  margin-right: 10px;
+  list-style-type: none;
+}
+
+.list-group-item {
+  border: 2px dashed  #d9e7ff;
+  border-radius: 10px;
+  margin: 10px 0;
+  padding: 5px;
+}
+.rumor{ 
+  color: #660303;
+  list-style: none;
+  background: rgba(248, 42, 42, 0.3);
+  padding: 5px
+  }
+
+.truth{
+  color: #057002;
+  list-style: none;
+  background: rgba(101, 170, 100, 0.12);
+  border-radius: 1px 1px 10px 10px;
+  padding: 5px;
+  
+}
+
+.rumor-title{
+  border-radius: 10px 10px 1px 1px;
+  color: #fff;
+  list-style: none;
+  background: #97233F;
+  text-align: center;
+}
+
+.truth-title{
+  
+  color: #fff;
+  list-style: none;
+  background: #4B6F44;
+  text-align: center;
+}
+.footer {
+ text-align: center;   
+    color: gray;
+
+}
+
+.title-background {
+    padding: 5px 0;
+text-align: center;
+width: 100%;
+background: #FA5656;
+border-radius: 50px;  
+}
+
+.title-text{ 
+font-family: Kalpurush ANSI;
+font-style: normal;
+font-weight: normal;
+font-size: 1.1em;
+color: white;
+}
+
+/* The Close Button */
+.close {
+    padding: 0 5px;
+  float: right;
+  border-radius: 10px;
+  background: white;
+  right: 10px;
+    position: relative;
+    font-size: 1.1em;
+
+}
+
+.close:hover,
+.close:focus {
+  color: #057002;
+  text-decoration: none;
+  cursor: pointer;
+}
