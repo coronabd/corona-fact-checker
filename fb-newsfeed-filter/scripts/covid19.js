@@ -134,7 +134,7 @@ $(document).ready(function() {
 
         //str += '<b>Decision Confidence:</b>&nbsp;' + data.confidence + "<br/>";
 
-        str += '<div class="mis-info-text-font"><b> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence * 100) + "%</b><br/></div>";
+        str += '<div class="mis-info-text-font misinfo-marker-info-padding"><b class="misinfo-marker-info-prob"> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence * 100) + "%</b><br/></div>";
 
         // if (data.similarity && data.similarity.length > 0){
         //     str += '<b>Similarity:</b>&nbsp;' + data.similarity + "<br/>" + "<hr/>"
@@ -142,13 +142,13 @@ $(document).ready(function() {
 
         //str += '<b>Explanation:</b><br/>' + data.explanation + "<br/>";
 
-        str += '<div class="misinfo-marker-info-padding" ><b class="mis-info-text-font"> সঠিক তথ্য:</b><br/>' + data.explanation + "<br/></div>";
+        str += '<div class="misinfo-marker-info-padding" ><b class="mis-info-text-font" style="color:green;"> সঠিক তথ্য:</b><br/><div class="misinfo-marker-info-truth">' + data.explanation + "<br/></div></div>";
 
         //str += '<b>Verified By:</b><br/>' + data.verified_by + "<br/>";
 
         //str += '<b>Verification Link:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
 
-        str += '<div><b>তথ্যসূত্র:</b><br/><a href="' + data.verification_link + '">' + 'বিশ্ব স্বাস্থ্য সংস্থা' + '</a></div>';
+        str += '<div><b class="mis-info-text-font" style="color:green;">তথ্যসূত্র:</b><br/><div class="misinfo-marker-info-truth-link" ><a style="color:white;" href="' + data.verification_link + '">' + 'এসংক্রান্ত তথ্য প্রমাণ জানতে এখানে ক্লিক করুন' + '</a></div></div>';
 
 
         var info = $('<div></div>').html(str);
@@ -159,15 +159,15 @@ $(document).ready(function() {
         var feedbackButton = $('<div class="misinfo_feedback_class"><a></a></div>');
         feedbackButton.attr('misinfoId', id)
         // feedbackButton.html('This should not be a Misinfo')
-        feedbackButton.html('আমি মনে করি না এই তথ্যটি ভুয়া')
-        feedbackButton.css('color', 'rgb(235, 28, 28)')
+        feedbackButton.html(' তাহলে এখানে  ক্লিক করে আমাদের জানান।')
+        //feedbackButton.css('color', 'rgb(235, 28, 28)')
 
         feedbackButton.click(function(e) {
             _handlefeedbackButtonClick(postData, fbpostId);
         });
 
 
-        var feedBackTile = $('<p>Provide Feedback</p>').addClass('provide_feedback_title');
+        var feedBackTile = $('<p style="color: #cf4040; font-weight: bolder;"> আপনি কি মনে করেন  এই তথ্যটি ভুয়া নয়?</p>').addClass('provide_feedback_title');
 
 
         var likeDislikeButtons = $("<div class='light-padding-top' style='text-align: center'> </div>");
@@ -358,8 +358,8 @@ $(document).ready(function() {
 
                 var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData, fbpost_id);
 
+                var closeButton = $("<div class='misinfo-marker-info-close-btn'>x</div>");
 
-                var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
                 infoElement.append(closeButton);
 
                 closeButton.click(function(e) {

@@ -31,12 +31,12 @@
     cursor: pointer;
     position: absolute;
     top: 15px;
-    right: 15px;
+    right: 18px;
     font-weight: bolder;
-    padding: 5px;
     border-radius: 20px;
     background: #ed7070;
     color: #efebec;
+    padding: 0 5px;
 }
 
 .misinfo-marker-info-wrapper {
@@ -48,6 +48,7 @@
     margin-top: 2em;
     padding: 40px 30px 30px 30px;
     color: #000000;
+    text-align:center;
 }
 
 .mis-info-text-font{
@@ -56,24 +57,45 @@
     font-size: 17px;
     line-height: 29px;
     letter-spacing: 0.03em;
-    color: rgb(49, 47, 47);
     font-weight: bold;
 }
 .misinfo-marker-info-padding{
-    padding:5px;
+    padding:10px;
 }
 .misinfo_feedback_class{
-    color: rgb(249, 88, 88);
     font-family: "Kalpurush ANSI";
     font-style: normal;
-    font-size: 17px;
+    font-size: 15px;
     line-height: 29px;
     letter-spacing: 0.03em;
-    font-weight: bold
+    font-weight: bold;
+    padding: 2px;
+    background: #ce4242;
+    border-radius: 12px;
+    color: #fcf8f1;
 }
+.misinfo-marker-info-prob{
+    color: #f6e2e2;
+    background: #dd6c6c;
+    border-radius: 23px;
+    padding: 10px;
+}
+.misinfo-marker-info-truth{
+    background: #83b260;
+    color: #f2fff3;
+    border-radius: 23px;
+    padding: 10px;
+}
+.misinfo-marker-info-truth-link{
+    padding: 10px;
+    background: #e59a34;
+    border-radius: 12px;
+    color: white !important;
+}
+
 .misinfo-marker1{
     float: left;
-    background: #F82A2A;
+    background: #d51414;
     border-radius: 10px;
     width: 45%;
 }
