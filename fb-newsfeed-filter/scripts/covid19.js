@@ -148,7 +148,7 @@ $(document).ready(function() {
 
         //str += '<b>Verification Link:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
 
-        str += '<div><b class="mis-info-text-font" style="color:green;">তথ্যসূত্র:</b><br/><div class="misinfo-marker-info-truth-link" ><a style="color:white;" href="' + data.verification_link + '">' + 'এসংক্রান্ত তথ্য প্রমাণ জানতে এখানে ক্লিক করুন' + '</a></div></div>';
+        str += '<div><b class="mis-info-text-font" style="color:green;">তথ্যসূত্র:</b><br/><div class="misinfo-marker-info-truth-link" ><a target="_blank" style="color:white;" href="' + data.verification_link + '">' + 'এসংক্রান্ত তথ্য প্রমাণ জানতে এখানে ক্লিক করুন' + '</a></div></div>';
 
 
         var info = $('<div></div>').html(str);
