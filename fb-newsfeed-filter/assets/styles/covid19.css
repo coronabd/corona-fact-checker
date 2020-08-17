@@ -3,7 +3,9 @@
     line-height: 2em;
     cursor: pointer;
     float: right;
-    width: 54%;
+    width: 50%;
+    float: left;
+    margin-left: 8px;
     background: #77A653 !important;
     border-radius: 10px;
     height: auto;
