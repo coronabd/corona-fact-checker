@@ -134,40 +134,37 @@ $(document).ready(function() {
 
         //str += '<b>Decision Confidence:</b>&nbsp;' + data.confidence + "<br/>";
 
-        str += '<div class="mis-info-text-font misinfo-marker-info-padding"><b class="misinfo-marker-info-prob"> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence * 100) + "%</b><br/></div>";
+        str += '<div class="mis-info-text-font"><b> এই তথ্যটি ভুল হবার সম্ভাবনা:&nbsp;' + Math.round(data.confidence * 100) + "%</b><br/></div>";
 
         // if (data.similarity && data.similarity.length > 0){
         //     str += '<b>Similarity:</b>&nbsp;' + data.similarity + "<br/>" + "<hr/>"
         // }
 
         //str += '<b>Explanation:</b><br/>' + data.explanation + "<br/>";
-
-        str += '<div class="misinfo-marker-info-padding" ><b class="mis-info-text-font" style="color:green;"> সঠিক তথ্য:</b><br/><div class="misinfo-marker-info-truth">' + data.explanation + "<br/></div></div>";
-
+        str += '<div><b> সঠিক তথ্য:</b><br/>' + data.explanation + "<br/></div>";
         //str += '<b>Verified By:</b><br/>' + data.verified_by + "<br/>";
 
         //str += '<b>Verification Link:</b><br/><a href="' + data.verification_link + '">'+ data.verification_link+'</a>';
 
-        str += '<div><b class="mis-info-text-font" style="color:green;">তথ্যসূত্র:</b><br/><div class="misinfo-marker-info-truth-link" ><a target="_blank" style="color:white;" href="' + data.verification_link + '">' + 'এসংক্রান্ত তথ্য প্রমাণ জানতে এখানে ক্লিক করুন' + '</a></div></div>';
-
+        str += '<div><b>তথ্যসূত্র:</b><br/><a href="' + data.verification_link + '">' + 'বিশ্ব স্বাস্থ্য সংস্থা' + '</a></div>';
 
         var info = $('<div></div>').html(str);
 
         // reportButtonWrapper.find('a').html('Report misinfo');
         // reportButtonWrapper.find('a').css('color', '#ff9022');
 
-        var feedbackButton = $('<div class="misinfo_feedback_class"><a></a></div>');
+        var feedbackButton = $('<div><a></a></div>');
         feedbackButton.attr('misinfoId', id)
         // feedbackButton.html('This should not be a Misinfo')
-        feedbackButton.html(' তাহলে এখানে  ক্লিক করে আমাদের জানান।')
-        //feedbackButton.css('color', 'rgb(235, 28, 28)')
+        feedbackButton.html('আমি মনে করি না এই তথ্যটি ভুয়া')
+        feedbackButton.css('color', 'rgb(235, 28, 28)')
 
         feedbackButton.click(function(e) {
             _handlefeedbackButtonClick(postData, fbpostId);
         });
 
 
-        var feedBackTile = $('<p style="color: #cf4040; font-weight: bolder;"> আপনি কি মনে করেন  এই তথ্যটি ভুয়া নয়?</p>').addClass('provide_feedback_title');
+        var feedBackTile = $('<p>Provide Feedback</p>').addClass('provide_feedback_title');
 
 
         var likeDislikeButtons = $("<div class='light-padding-top' style='text-align: center'> </div>");
@@ -295,10 +292,9 @@ $(document).ready(function() {
 
         misinfoCount = misinfoCount + 1;
 
-
         //var ismisinfo = misinfo_result.decision === 'misinfo';
 
-        var misinfoMarker = $("<div class='misinfo-marker1'><div class='misinfo-marker1-heading1'>এটি একটি ভুয়া  তথ্য </div><div class='misinfo-marker1-heading2'> বিশেষজ্ঞরা এটাকে ফেক নিউজ হিসেবে নিশ্চিত করেছেন </div></div><div class='misinfo-marker-span'><div class='misinfo-marker1-heading1'>বিস্তারিত জানুন</div><div class='misinfo-marker1-heading2'>তথ্যটি কেন ভুয়া, সে সম্পর্কিত তথ্য প্রমাণ জানতে ক্লিক করুন</div></div>");
+        var misinfoMarker = $("<div class='misinfo-marker1'><div class='misinfo-marker1-heading1'>এটি একটি ভুয়া তত্থ্য </div><div class='misinfo-marker1-heading2'> বিশেষজ্ঞরা এটাকে ফেক নিউজ হিসেবে নিশ্চিত করেছেন </div></div><div class='misinfo-marker-span'><div class='misinfo-marker1-heading1'>বিস্তারিত জানুন</div><div class='misinfo-marker1-heading2'>তথ্যটি কেন ভুয়া, সে সম্পর্কিত তথ্য প্রমাণ জানতে ক্লিক করুন</div></div>");
 
         misinfoMarker.attr('id', _getmisinfoLabelId(misinfoCount));
 
@@ -358,8 +354,8 @@ $(document).ready(function() {
 
                 var infoElement = _getmisinfoInfoElement(misinfo_result.data, misinfo_popupid, postData, fbpost_id);
 
-                var closeButton = $("<div class='misinfo-marker-info-close-btn'>x</div>");
 
+                var closeButton = $("<div class='misinfo-marker-info-close-btn'>Close</div>");
                 infoElement.append(closeButton);
 
                 closeButton.click(function(e) {
@@ -389,6 +385,7 @@ $(document).ready(function() {
     var loop = function() {
         $(facebook_link_post_container).each(function(obj) {
             var nodeObj = $(this);
+            log(this);
 
             // if node has already been checked
             if (nodeObj.hasClass(checked_link_tag)) return;
@@ -429,7 +426,6 @@ $(document).ready(function() {
             if (post.includes('Coronavirus') || post.includes('করোনা') || post.includes('corona') ||
                 post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")) {
                 _showMisinfoMarker(title, text, link, post, shared_post, nodeObj, fbpost_id);
-
             }
         });
     };
@@ -441,7 +437,7 @@ $(document).ready(function() {
      * @param {object} result - json object containing the cache.
      */
     function modalShow(cache = 0, result = null) { // cache true of false
-        console.log('Modal Building' + cache)
+        log('Modal Building')
         var modalTitle = "করোনা সংক্রান্ত ভুয়া খবর থেকে সতর্ক থাকুন"
         var labelMoreButton = "আরও জানুন"
         var labelCloseButton = "বন্ধ করুন"
@@ -499,14 +495,14 @@ $(document).ready(function() {
         // message listener for whole content script
         chrome.runtime.onMessage.addListener(
             function(request, sender, sendResponse) {
-                console.log(sender.tab ?
+                log(sender.tab ?
                     "from a content script:" + sender.tab.url :
                     "from the extension");
                 if (jQuery.isEmptyObject(request.msg) == false) { // cache found
-                    console.log("Old Cache Found")
+                    log("old cache found")
 
                     if ($('#myModal').length) {
-                        console.log($('#myModal').length)
+                        log($('#myModal').length)
                         $("#myModal").toggle();
                     } else {
                         modalShow(1, request.msg);
@@ -514,16 +510,13 @@ $(document).ready(function() {
 
 
                 } else if (jQuery.isEmptyObject(request.msg)) { // no cache found
-                    console.log("Old Cache Not Found");
+                    log("old cache not found");
                     modalShow(0);
 
                 }
             });
         if (document.URL.match("(www.|http:\/\/|https:\/\/|m.)(facebook|fb).com")) {
             IS_FACEBOOK = true;
-            console.log('---------- NEW LOOP -----------')
-
-            console.log("FACEBOOK")
 
             var port = chrome.runtime.connect({
                 name: "cookie_comm"
@@ -534,9 +527,9 @@ $(document).ready(function() {
             // listener
             port.onMessage.addListener(function(response) {
                 if (response.msg == 'shown') {
-                    console.log('Already Shown')
+                    log('modal already shown')
                 } else if (response.msg == 'notshown') {
-                    console.log('will show now')
+                    log('modal will be shown now')
                     port.postMessage({
                         msg: 'checkcache'
                     });
@@ -544,10 +537,10 @@ $(document).ready(function() {
                         msg: 'setcookie'
                     });
                 } else {
-                    console.log('cache found');
+                    log('modal data found in cache');
 
                     if ($('#myModal').length) {
-                        console.log($('#myModal').length)
+                        log($('#myModal').length)
                         $("#myModal").toggle();
                     } else {
                         modalShow(1, response.msg);
@@ -558,9 +551,19 @@ $(document).ready(function() {
         }
 
         if (IS_FACEBOOK) {
-            console.log("Covid19 Misinfo Tracker Active on Facebook");
+            log("Covid19 Misinfo Tracker Active on Facebook");
             document.onscroll = loop;
             loop();
         }
     })();
 });
+
+
+function log(obj) {
+    let filename = "covid19.js"
+    let now = new Date()
+    let time = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDate()
+        + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
+
+    console.log(time + ": ", obj)
+}

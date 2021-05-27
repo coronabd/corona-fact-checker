@@ -130,7 +130,7 @@ chrome.runtime.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(response) {
 
         if (response.msg == "checkcookie") {
-            console.log('RECIEVED MSG FROM CONTENT')
+            console.log('received msg from content')
 
             chrome.cookies.get({
                 url: FB_URL,
@@ -156,7 +156,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                 value: "shown",
                 expirationDate: expmin
             }, function(cookie) {
-                console.log("Cookie Setup Successful " + cookie.value);
+                console.log("cookie setup successful " + cookie.value);
             });
         } else if (response.msg == 'checkcache') {
             chrome.storage.local.get('CORONAMISINFO', function(data) {
@@ -164,7 +164,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                     msg: data.CORONAMISINFO
                 });
             })
-            console.log('Cache Result sent to content')
+            console.log('cache result sent to content')
         }
     });
 });
