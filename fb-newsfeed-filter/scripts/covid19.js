@@ -579,5 +579,5 @@ function log(text, obj) {
     let time = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDate()
         + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()
     if (obj === undefined) console.log(time + ": ", text)
-    else console.log(time + ": ", text)
+    else console.log(time + ": ", text, obj)
 }
