@@ -427,7 +427,8 @@ $(document).ready(function () {
 
             linkObj.mouseleave();
             if (post.includes('Coronavirus') || post.includes('করোনা') || post.includes('corona') ||
-                post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস")) {
+                post.includes('covid19') || post.includes('Covid19') || post.includes("করোনা ভাইরাস") ||
+                post.includes("ভ্যাকসিন") || post.includes("মৃত্যু")) {
                 _showMisinfoMarker(title, text, link, post, shared_post, nodeObj, post_id);
             }
         });

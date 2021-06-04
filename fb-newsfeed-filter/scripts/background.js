@@ -13,26 +13,6 @@ var pattern = ["https://www.facebook.com/lalsalu.page/posts/2769601203135709",
 ];
 var currenturl = ""
 
-//post request to server
-// var serverData;
-// var xmlhttp = new XMLHttpRequest();
-
-// //collect all the blacklisted urls in this urlList
-// var urlList = [];
-// xmlhttp.onreadystatechange = function() {
-//     if (this.readyState == 4 && this.status == 200) {
-//         serverData = JSON.parse(this.responseText);
-//         //console.log(serverData)
-//         for (i = 0; i < serverData.length; i++) {
-//             //console.log(serverData[i]['url'])
-//             urlList.push(serverData[i]['url'])
-//         };
-//         // console.log(urlList)
-//         //console.log(pattern)
-//     };
-// };
-// xmlhttp.open("POST", url, false);
-// xmlhttp.send();
 
 var requestedURL;
 // cancel function returns an object
@@ -76,24 +56,7 @@ chrome.webRequest.onCompleted.addListener(temp, {
 });
 chrome.tabs.onActivated.addListener(temp)
 
-//------------ cookies -----------------
 var biscuit;
-
-// function checkforcookie(tab) {
-//     console.log('---------- NEW LOOP -----------')
-//     chrome.cookies.get({ url: "https://facebook.com", name: "modal"}, function (cookie) {
-//         if (cookie == null) {
-//             biscuit = 'undefined';
-//             console.log("THE COOKIE,"+ biscuit);
-//         }
-//         else {
-//             biscuit = cookie.value;
-//             console.log("THE COOKIE,"+ biscuit);
-//         }
-//         //                    chrome.tabs.sendMessage(tabs, {msg: biscuit});
-//     });
-
-// }
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
