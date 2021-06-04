@@ -1,5 +1,5 @@
 {
-    "author": "Covid19 Misinfo Team",
+    "author": "Covid19 Mis-info Team",
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "run_at": "document_idle",
@@ -27,7 +27,7 @@
     "background": {
         "scripts": ["scripts/jquery.js", "scripts/background.js", "scripts/bootstrap.js", "scripts/_auto_reload.js"]
     },
-    "version": "0.0.1",
+    "version": "0.0.2",
     "web_accessible_resources": [
         "scripts/jquery.js",
         "scripts/covid.js",
